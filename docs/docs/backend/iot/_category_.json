@@ -1,0 +1,8 @@
+{
+  "label": "IoT",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "Documentation des services IoT"
+  }
+}
