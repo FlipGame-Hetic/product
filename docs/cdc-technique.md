@@ -55,24 +55,22 @@ Une série de cas d'usage anticipés a été ajoutée et est disponible dans le 
 ---
 
 ## 6. Stack technique
+| Composant                | Techno                     | Justification                                                      |
+| ------------------------ | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Rendu / Physique         | Three.js (R3F) + Rapier.js | Simulation physique déterministe côté client en temps réel |
+| UI / Style               | TailwindCSS                | Permet d’itérer vite sur l’interface borne et UI                                      |
+| État global              | Zustand                    | Synchronisation simple sans re-render inutiles                                                        |
+| Typage                   | TypeScript                 | Typage statique pour la sécurité et la lisibilité du code                                            |
+| Framework front          | React                      | Découplage clair entre rendu du monde et overlay UI (scores, effets, feedback joueur)                                                                 |
+| Backend / Logique métier | Rust                       | Serveur authoritative (gestion des ticks) capable de simuler la partie sans jitter ni pauses, avantage de la performance par rapport à un autre langage|
+| Protocole IoT            | MQTT                       | Absorbe le bruit matériel des capteurs physiques et normalise les événements venant de l’ESP32                                                        |
+| Temps réel front         | WebSocket                  | Transmission au serveur vers le renderer minimale                                                                  |
+| Cache / Pub-Sub          | Redis                      | Relais interne entre instances de simulation pour le 1v1 (multiplayer) et le cache des données                                                         |
+| Persistance              | PostgreSQL                 | Stockage fiable des scores, parties et stats compétitives                                                                                             |
+| Déploiement / DevOps     | Docker                     | Reproduire localement la stack réseau complète du flipper jusqu’au serveur multi                                                                      |
+| CI/CD                    | GitHub Actions             | Automatisation des tests et déploiements pour garantir la qualité et la stability du code                                                              |
+| Déploiement / VPS    | Google Cloud Platform (GCP) | Avoir un contrôle sur les déploiements et les ressources disponibles, faciliter le scalling et la gestion du multijoueur                                     |
 
-| Composant                | Techno                      | Justification                                                                                                                                           |
-| ------------------------ | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Rendu / Physique         | Three.js (R3F) + Rapier.js  | Simulation physique déterministe côté client en temps réel                                                                                              |
-| UI / Style               | TailwindCSS                 | Permet d’itérer vite sur l’interface borne et UI                                                                                                        |
-| État global              | Zustand                     | Synchronisation simple sans re-render inutiles                                                                                                          |
-| Typage                   | TypeScript                  | Typage statique pour la sécurité et la lisibilité du code                                                                                               |
-| Framework front          | React                       | Découplage clair entre rendu du monde et overlay UI (scores, effets, feedback joueur)                                                                   |
-| Backend / Logique métier | Rust                        | Serveur authoritative (gestion des ticks) capable de simuler la partie sans jitter ni pauses, avantage de la performance par rapport à un autre langage |
-| Protocole IoT            | MQTT                        | Protocole léger publish/subscribe pour l'ESP32                                                                                                          |
-| IOT/ESP32                | C++                         | Rapidité et stabilité du C++ et de ses libs                                                                                                             |
-| Temps réel front         | WebSocket                   | Transmission au serveur vers le renderer minimale                                                                                                       |
-| Cache / Pub-Sub          | Redis                       | Relais interne entre instances de simulation pour le 1v1 (multiplayer) et le cache des données                                                          |
-| Persistance              | PostgreSQL                  | Stockage fiable des scores, parties et stats compétitives                                                                                               |
-| Déploiement / DevOps     | Docker                      | Reproduire localement la stack réseau complète du flipper jusqu’au serveur multi                                                                        |
-| CI/CD                    | GitHub Actions              | Automatisation des tests et déploiements pour garantir la qualité et la stability du code                                                               |
-| Déploiement / VPS        | Google Cloud Platform (GCP) | Avoir un contrôle sur les déploiements et les ressources disponibles, faciliter le scalling et la gestion du multijoueur                                |
-| CND / Bucket             | S3 storage / CDN            | Hébergement des assets statiques (build front, textures, sons) avec CDN pour réduire la latence et améliorer les performances en multijoueur            |
 
 **Alternatives écartées :**
 
@@ -83,8 +81,6 @@ Une série de cas d'usage anticipés a été ajoutée et est disponible dans le 
 - `Railway` => peut être instable, facile à mettre en place mais difficilement scalable par rapport à GCP
 - `Supabase` => Facile à mettre en place mais pas adpater à nos besoin.
 - `Python`=> langage accessible, syntaxe simple, mais pas adapter à un besoin de performance élevée et de contexte d'iot en temps réel
-- `C` => langage plus complexe et temps de développement accru pour résultat équivalent voire meilleur
-
 ---
 
 ## 7. Risques et contraintes
