@@ -1,0 +1,17 @@
+stateDiagram-v2
+    [*] --> Attente
+
+    Attente --> SelectionPersonnage : Bouton Start appuyé
+    SelectionPersonnage --> EnJeu : Personnage sélectionné
+
+    EnJeu --> BillePerdue : Bille hors limites
+    EnJeu --> EnJeu : Buff activé
+
+    BillePerdue --> EnJeu : Balles restantes
+    BillePerdue --> FinDePartie : Plus de balles
+
+    FinDePartie --> Attente : Rejouer
+
+    FinDePartie --> [*]
+
+%%  Alexis Gontier - v1.0.0 - 17/02/26

@@ -1,15 +1,14 @@
-stateDiagram-v2
-    [*] --> Attente
+graph LR
+    J([Joueur])
 
-    Attente --> SelectionPersonnage : Bouton Start appuyé
-    SelectionPersonnage --> EnJeu : Personnage sélectionné
+    J --> UC1[UC-01 Démarrer une partie]
+    J --> UC2[UC-02 Choisir un personnage]
+    J --> UC3[UC-03 Jouer en PvE]
+    J --> UC4[UC-04 Affronter un boss]
+    J --> UC5[UC-05 Activer son ultime]
+    J --> UC6[UC-06 Perdre une bille]
+    J --> UC7[UC-07 Tilt]
+    J --> UC8[UC-08 Match PvP]
+    J --> UC9[UC-09 Terminer une partie]
 
-    EnJeu --> BillePerdue : Bille hors limites
-    EnJeu --> EnJeu : Buff activé
-
-    BillePerdue --> EnJeu : Balles restantes
-    BillePerdue --> FinDePartie : Plus de balles
-
-    FinDePartie --> Attente : Rejouer
-
-    FinDePartie --> [*]
+%%  Alexis Gontier - v1.0.0 - 17/02/26
