@@ -26,3 +26,5 @@
 - 5a. Le boss applique un malus au joueur (boss 2 et 3) → le système modifie temporairement le comportement du plateau (ex. flippers ralentis, zones neutralisées)
 
 **Postconditions :** Le boss est vaincu, ses HP sont à 0, le système prépare la transition vers le boss suivant ou la victoire finale
+
+Arthur Jenck - v1.0.0 - 17/02/26

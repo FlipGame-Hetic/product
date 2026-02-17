@@ -26,3 +26,5 @@
 - 6a. Le joueur appuie sur "Start" pendant l'écran de résultats → la borne démarre une nouvelle session (UC-01)
 
 **Postconditions :** La progression est sauvegardée, la borne est revenue en mode veille, prête pour une nouvelle partie
+
+Arthur Jenck - v1.0.0 - 17/02/26

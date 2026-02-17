@@ -24,3 +24,5 @@
 - 4a. Le joueur n'actionne pas le plunger dans le délai attendu → un rappel visuel/sonore est affiché, la partie reste en attente
 
 **Postconditions :** Une nouvelle partie est active, la première bille est lancée, les compteurs sont initialisés
+
+Arthur Jenck - v1.0.0 - 17/02/26

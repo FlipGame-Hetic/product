@@ -25,3 +25,5 @@
 - 5a. C'était la dernière vie → Game Over déclenché immédiatement
 
 **Postconditions :** La bille est perdue, le compteur de vies est décrémenté, la partie continue ou se termine selon les vies restantes
+
+Arthur Jenck - v1.0.0 - 17/02/26
