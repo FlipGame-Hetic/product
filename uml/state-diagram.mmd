@@ -1,13 +1,13 @@
 stateDiagram-v2
-    [*] --> Waiting
+    [*] --> Attente
 
-    Waiting --> Playing : Start button pressed
+    Attente --> EnJeu : Bouton Start appuyé
 
-    Playing --> BallLost : Ball out of bounds
+    EnJeu --> BillePerdue : Bille hors limites
 
-    BallLost --> Playing : Balls remaining
-    BallLost --> GameOver : No balls left
+    BillePerdue --> EnJeu : Balles restantes
+    BillePerdue --> FinDePartie : Plus de balles
 
-    GameOver --> Waiting : Play again
+    FinDePartie --> Attente : Rejouer
 
-    GameOver --> [*]
+    FinDePartie --> [*]
