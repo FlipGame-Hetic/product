@@ -1,0 +1,13 @@
+stateDiagram-v2
+    [*] --> Waiting
+
+    Waiting --> Playing : Start button pressed
+
+    Playing --> BallLost : Ball out of bounds
+
+    BallLost --> Playing : Balls remaining
+    BallLost --> GameOver : No balls left
+
+    GameOver --> Waiting : Play again
+
+    GameOver --> [*]
