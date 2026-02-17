@@ -128,9 +128,9 @@
 | Integration | S7-S8    | Config DMD - Integration layout fliper - Setup IoT         |
 | Integration | S9-S10   | Physics Flipper - Continuité IoT - test perf backend       |
 | Integration | S11-S12  | Mech VS Fighting (combo, buff, malus,ect.), - Multiplayer  |
-| Demo        | S12-S14  | Thème cyberpunk, effets néons/particules, TTP optimisé     |
-| Demo        | S15-S16  | Thème cyberpunk, effets néons/particules, TTP optimisé     |
-| Demo        | S17-S18  | Intégration finale, présentation, tag `v1.0.0`             |
+| Integration | S12-S14  | Thème cyberpunk, effets néons/particules, TTP optimisé     |
+| Integration | S15-S16  | DMD virtuelle, Gameplay Desktop / mobile, IA(taunt)        |
+| Release     | S17-S18  | Intégration finale, Polish, Debug, tag `v1.0.0`            |
 
 ### Questions ouvertes
 
