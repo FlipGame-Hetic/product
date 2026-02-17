@@ -1,0 +1,38 @@
+sequenceDiagram
+    participant ESP as ESP32
+    participant MQTT as Mosquitto Broker
+    participant BRIDGE as Bridge Local
+    participant SRV as Serveur
+    participant PF as Playfield
+    participant BG as Backglass
+
+    Note over ESP,BG: Joueur appuie sur le flipper
+
+    ESP->>MQTT: pub flipper_appuyé
+    MQTT->>BRIDGE: sub flipper_appuyé
+    BRIDGE->>BRIDGE: calcul feedback local 3Js
+    BRIDGE->>MQTT: pub vibration + son
+    MQTT->>ESP: sub vibration + son
+    BRIDGE->>SRV: WebSocket flipper_appuyé
+
+    SRV->>PF: WebSocket activer_flipper
+    PF->>PF: Rapier.js applique force
+
+    Note over PF,BG: Collision avec bumper
+
+    PF->>SRV: WebSocket bumper_touché 100pts
+    SRV->>SRV: mise à jour score
+    SRV->>BG: WebSocket mise_à_jour_score
+    SRV->>BRIDGE: WebSocket bumper_touché
+    BRIDGE->>MQTT: pub déclencher_solénoïde
+    MQTT->>ESP: sub déclencher_solénoïde
+    ESP->>ESP: active solénoïde
+
+    Note over ESP,BG: Bille perdue
+
+    ESP->>MQTT: pub bille_perdue
+    MQTT->>BRIDGE: sub bille_perdue
+    BRIDGE->>SRV: WebSocket bille_perdue
+    SRV->>SRV: mise à jour balles restantes
+    SRV->>PF: WebSocket bille_perdue
+    SRV->>BG: WebSocket fin_de_partie
