@@ -1,9 +1,11 @@
 stateDiagram-v2
     [*] --> Attente
 
-    Attente --> EnJeu : Bouton Start appuyé
+    Attente --> SelectionPersonnage : Bouton Start appuyé
+    SelectionPersonnage --> EnJeu : Personnage sélectionné
 
     EnJeu --> BillePerdue : Bille hors limites
+    EnJeu --> EnJeu : Buff activé
 
     BillePerdue --> EnJeu : Balles restantes
     BillePerdue --> FinDePartie : Plus de balles
