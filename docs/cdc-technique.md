@@ -134,25 +134,18 @@ Une série de cas d'usage anticipés a été ajoutée et est disponible dans le 
 
 ## 9. Roadmap et questions ouvertes
 
-| Phase       | Semaines | Objectif                                                   |
-| ----------- | -------- | ---------------------------------------------------------- |
-| CDC + Setup | S1-S2    | CDC validé,repos prêt, Game design                         |
-| Testing     | S3-S4    | Flipper minimalist - MQTT / Websocket - Setup simu IoT     |
-| Design      | S5-S6    | Setup Endpoint, Création des premier assets, UI backscreen |
-| Integration | S7-S8    | Config DMD - Integration layout fliper - Setup IoT         |
-| Integration | S9-S10   | Physics Flipper - Continuité IoT - test perf backend       |
-| Integration | S11-S12  | Mech VS Fighting (combo, buff, malus,ect.), - Multiplayer  |
-| Integration | S12-S14  | Thème cyberpunk, effets néons/particules, TTP optimisé     |
-| Integration | S15-S16  | DMD virtuelle, Gameplay Desktop / mobile, IA(taunt)        |
-| Release     | S17-S18  | Intégration finale, Polish, Debug, tag `v1.0.0`            |
+| Phase       | Semaines | Objectif                                                        |
+| ----------- | -------- | --------------------------------------------------------------- |
+| CDC + Setup | S1       | CDC validé,repos prêt                                           |
+| POC         | S2-S3    | Flipper jouable (1 écran, physique de base, 1 flipper physique) |
+| MVP         | S4-S7    | 3 écrans sync, 4 persos, buff/malus, mode PvP room              |
+| Polish      | S8-S9    | Thème cyberpunk, effets néons/particules, TTP optimisé          |
+| Demo        | S10      | Intégration finale, présentation, tag `v1.0.0`                  |
 
 ### Questions ouvertes
 
 - [ ] Comment afficher les instructions de capacité sans sortir le joueur de sa partie ?
 - [ ] Faut-il un système de compte / login pour le mode PvP, ou juste un code de room suffisamment court ?
 - [ ] Gestion de l'auth ws / bridge interne à mqtt ou personalisé ?
-- [ ] Gestion du multijoueur entre les différents écran ?
-- [ ] Est-ce que le nombre de billes dans une partie PvP est défini à 3 ou peut être choisi par le joueur en début de partie ?
-- [ ] Si les deux joueurs finissent avec le même nombre de PV, est-ce qu'on accepte un cas d'égalité ? Nouvelle partie pour départager ?
 
 Maxime Bidan - Arnaud Fischer - Louis Dondey - Arthure Jenck - Alexis Gontier - v1.0.0 - 17/02/26
