@@ -14,7 +14,7 @@ Lorem ipsum
 
 - [ ] L’issue est liée avec un mot-clé (`related to #XXX`)
 - [ ] La PR est bien faite vers la bonne branche
-- [ ] Les checks listés dans l’issue Linear ont été effectués
+- [ ] Les checks listés dans l’issue ont été effectués
 
 ### 🧪 Vérifications techniques
 
