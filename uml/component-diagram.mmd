@@ -1,9 +1,21 @@
 graph TB
     subgraph Frontend
+        PF[Playfield<br/>React + Three.js + Rapier.js]
+        BG[Backglass<br/>React + Vite]
+        DMD[DMD<br/>React + Vite]
     end
 
     subgraph Backend
+        SRV[Rust]
     end
 
     subgraph IoT
+        ESP[ESP32]
+        RPI[Raspberry Pi]
     end
+
+    PF <-->|WebSocket| SRV
+    BG <-->|WebSocket| SRV
+    DMD <-->|WebSocket| SRV
+    ESP -->|Serial| RPI
+    RPI <-->|WebSocket| SRV
