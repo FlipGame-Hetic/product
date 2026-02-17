@@ -88,6 +88,28 @@ Une série de cas d'usage anticipés a été ajoutée et est disponible dans le 
 
 ### Contraintes
 
+| Risque                                                     | Probabilité | Impact | Mitigation                                                            |
+| ---------------------------------------------------------- | ----------- | ------ | --------------------------------------------------------------------- |
+| Latence WebSocket trop élevée en PvP (2 bornes distantes)  | Haute       | Fort   | POC réseau S3-S4, seuil de tolérance défini                           |
+| Physique Rapier.js difficile à calibrer (rebonds, gravité) | Haute       | Fort   | Tests dès S3, paramètres ajustables via config, itérations courtes    |
+| Désynchronisation des 3 écrans en cours de partie          | Moyenne     | Fort   | Serveur autoritatif en Rust, état de jeu unique, resync automatique   |
+| Gyroscope : faux positifs de tilt                          | Haute       | Moyen  | Seuil de sensibilité calibrable, filtre logiciel côté ESP32           |
+| Monnayeur physique non détecté (défaut matériel)           | Moyenne     | Moyen  | Tests matériels dès S3, procédure de fallback manuel                  |
+| Surcharge du serveur GCP en pic de charge PvP              | Faible      | Fort   | Redis en pub-sub, architecture stateless, load testing avant release  |
+| Rust : courbe d'apprentissage pour l'équipe                | Haute       | Moyen  | Formation S1-S2, restreindre Rust au serveur authoritative uniquement |
+| Panne d'un écran pendant une démo                          | Faible      | Fort   | Tests de reconnexion automatique, prévoir écran de remplacement       |
+| Intégration MQTT ↔ WebSocket plus complexe que prévue      | Moyenne     | Moyen  | POC bridge MQTT/WS dès S3, découplage strict des responsabilités      |
+
+### Contraintes
+
+- **Délai :** 18 semaines (soutenance finale S19)
+- **Équipe :** 5 personnes (frontend, backend, IoT, DevOps, design)
+- **Matériel :** 1 borne physique avec 3 écrans intégrés, 1 ESP32, 1 gyroscope, 1 monnayeur physique, breadboard et composants électroniques
+- **Infrastructure :** 1 VPS GCP géré par le DevOps de l'équipe
+- **Budget matériel :** à définir
+- **Contrainte réseau :** le PvP nécessite que les deux bornes soient connectées au même serveur distant — une coupure réseau met fin à la session
+- **Contrainte physique :** la borne est un équipement unique partagé — les tests IoT et hardware ne peuvent pas se faire en parallèle du développement front
+
 ---
 
 ## 8. Conventions équipe
