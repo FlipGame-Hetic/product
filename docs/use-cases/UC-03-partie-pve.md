@@ -27,5 +27,3 @@
 - 6a. Le joueur perd sa dernière vie avant de vaincre les 3 boss → "Game Over" affiché sur le DMD, le run se termine, XP partiel attribué
 
 **Postconditions :** Score et XP enregistrés sur le serveur, la borne repasse en mode veille/accueil
-
-Arthur Jenck - v1.0.0 - 17/02/26

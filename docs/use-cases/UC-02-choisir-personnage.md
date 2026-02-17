@@ -23,5 +23,3 @@
 - 2a. Un seul personnage est disponible → la sélection est ignorée, le personnage est attribué automatiquement
 
 **Postconditions :** Le personnage est sélectionné, ses statistiques et son ultime sont chargés pour le lancement de la partie (UC-01)
-
-Arthur Jenck - v1.0.0 - 17/02/26

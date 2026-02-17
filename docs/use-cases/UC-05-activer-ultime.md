@@ -26,5 +26,3 @@
 - 5a. La cible est déjà à 0 HP au moment de l'impact (mort simultanée) → les dégâts excédentaires sont ignorés
 
 **Postconditions :** La barre d'ultime est vide, les dégâts sont appliqués à la cible, le jeu reprend normalement
-
-Arthur Jenck - v1.0.0 - 17/02/26

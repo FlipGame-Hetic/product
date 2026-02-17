@@ -30,5 +30,3 @@
 - 9a. Un joueur déconnecte en cours de partie → forfait déclaré après un délai de grâce, l'adversaire est déclaré vainqueur
 
 **Postconditions :** Résultats enregistrés sur le serveur, les deux bornes retournent à l'écran d'accueil de façon synchronisée
-
-Arthur Jenck - v1.0.0 - 17/02/26

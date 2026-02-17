@@ -25,5 +25,3 @@
 - 5a. Une désynchronisation des vies est détectée entre borne et serveur → le système resynchronise le compteur avant la reprise
 
 **Postconditions :** Le compteur de vies est décrémenté, la bille est relancée ou la partie se termine selon les vies restantes
-
-Arthur Jenck - v1.0.0 - 17/02/26
