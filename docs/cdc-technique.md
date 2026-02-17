@@ -118,5 +118,7 @@ Une série de cas d'usage anticipés a été ajoutée et est disponible dans le 
 - [ ] Faut-il un système de compte / login pour le mode PvP, ou juste un code de room suffisamment court ?
 - [ ] Gestion de l'auth ws / bridge interne à mqtt ou personalisé ?
 - [ ] Gestion du multijoueur entre les différents écran ?
+- [ ] Est-ce que le nombre de billes dans une partie PvP est défini à 3 ou peut être choisi par le joueur en début de partie ?
+- [ ] Si les deux joueurs finissent avec le même nombre de PV, est-ce qu'on accepte un cas d'égalité ? Nouvelle partie pour départager ?
 
 Maxime Bidan - Arnaud Fischer - Louis Dondey - Arthure Jenck - Alexis Gontier - v1.0.0 - 17/02/26
