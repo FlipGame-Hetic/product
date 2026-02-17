@@ -4,7 +4,7 @@
 
 ## 1. Vision
 
-**Flipper** est un jeu de pinball virtuel multijoueur au thème cyberpunk intégré dans une borne physique, l'objectif est de proposer une expérience arcade moderne alliant jeu combat et mécanique de flipper classique en proposant à la fois du PvE et du PvP.
+**Flipper** est un jeu de pinball virtuel multijoueur au thème cyberpunk intégré dans une borne physique où l'objectif est de proposer une expérience arcade moderne alliant jeu combat et mécanique de flipper classique en proposant à la fois du PvE et du PvP.
 
 ---
 
@@ -12,23 +12,25 @@
 
 ### Objectifs
 
-1. Simuler une table de flipper avec physique réaliste (balle, flippers, rebonds, gravité)
+1. Simuler une table de flipper avec une physique réaliste (balle, flippers, rebonds, gravité)
 2. Intégrer 4 personnages jouables avec chacun un buff et un malus activables
 3. Synchroniser 3 écrans en temps réel via WebSocket
-4. Permettre le contrôle via les capteurs physiques (ESP32/Raspberry Pi) et le web
-5. Proposer un mode PvP local avec système de room par code
+4. Permettre le contrôle via les inputs physiques et virtuel (pour la partie web)
+5. Mise en place d'un sounds design immercif
+6. Intégration de l'IA (analyse, aide, taunt)
+7. Proposer un mode PvP avec système de room par code
 
 ### Non-objectifs
 
-1. Pas de matchmaking en ligne avec des inconnus
+1. Pas de matchmaking en ligne
 2. Pas d'éditeur de table personnalisé
-3. Bot qui joue contre le joueur
+3. Pas de Bot qui joue contre le joueur
 
 ### Personas
 
-**Lucas**, 20 ans, étudiant — il veut tester la borne avec ses amis, sans lire de notice. Il s'attend à jouer en moins de 10 secondes après avoir appuyé sur le premier bouton.
+**Lucas**, 20 ans, étudiant — il veut tester la borne avec ses amis en local, sans lire de notice. Il s'attend à jouer en moins de 10 secondes après avoir appuyé sur le premier bouton.
 
-**Camille**, 22 ans, étudiante dev web — elle contribue au projet, elle veut une architecture claire et un environnement de dev bien configuré pour ne pas perdre de temps.
+**Camille**, 22 ans, fan d'esport, ce qui l'interesse c'est la compétition. Elle veux une experience de combat équitable, sans lag et pouvoir facilement lancé un combat contre sont adversaire.
 
 ---
 
@@ -104,16 +106,21 @@
 
 ## 9. Roadmap et questions ouvertes
 
-| Phase       | Semaines | Objectif                                                        |
-| ----------- | -------- | --------------------------------------------------------------- |
-| CDC + Setup | S1       | CDC validé,repos prêt                                           |
-| POC         | S2-S3    | Flipper jouable (1 écran, physique de base, 1 flipper physique) |
-| MVP         | S4-S7    | 3 écrans sync, 4 persos, buff/malus, mode PvP room              |
-| Polish      | S8-S9    | Thème cyberpunk, effets néons/particules, TTP optimisé          |
-| Demo        | S10      | Intégration finale, présentation, tag `v1.0.0`                  |
+| Phase       | Semaines | Objectif                                                   |
+| ----------- | -------- | ---------------------------------------------------------- |
+| CDC + Setup | S1-S2    | CDC validé,repos prêt, Game design                         |
+| Testing     | S3-S4    | Flipper minimalist - MQTT / Websocket - Setup simu IoT     |
+| Design      | S5-S6    | Setup Endpoint, Création des premier assets, UI backscreen |
+| Integration | S7-S8    | Config DMD - Integration layout fliper - Setup IoT         |
+| Integration | S9-S10   | Physics Flipper - Continuité IoT - test perf backend       |
+| Integration | S11-S12  | Mech VS Fighting (combo, buff, malus,ect.), - Multiplayer  |
+| Demo        | S12-S14  | Thème cyberpunk, effets néons/particules, TTP optimisé     |
+| Demo        | S15-S16  | Thème cyberpunk, effets néons/particules, TTP optimisé     |
+| Demo        | S17-S18  | Intégration finale, présentation, tag `v1.0.0`             |
 
 ### Questions ouvertes
 
 - [ ] Comment afficher les instructions de capacité sans sortir le joueur de sa partie ?
 - [ ] Faut-il un système de compte / login pour le mode PvP, ou juste un code de room suffisamment court ?
 - [ ] Gestion de l'auth ws / bridge interne à mqtt ou personalisé ?
+- [ ] Gestion du multijoueur entre les différents écran ?
