@@ -1,5 +1,61 @@
 classDiagram
-    Playfield *-- Bille : contient
-    Playfield *-- Flipper : contient
-    Playfield *-- Bumper : contient
-    Playfield --> Serveur : communique
+    class Playfield {
+        +Bille bille
+        +Flipper[] flippers
+        +Bumper[] bumpers
+        +Personnage personnage
+        +rendu()
+        +gererPhysique()
+    }
+
+    class Bille {
+        +Vector3 position
+        +Vector3 vitesse
+        +appliquerForce()
+        +reinitialiser()
+    }
+
+    class Flipper {
+        +string cote
+        +bool estActif
+        +activer()
+        +desactiver()
+    }
+
+    class Personnage {
+        +string nom
+        +string buff
+        +string malus
+        +activerBuff()
+        +activerMalus()
+    }
+
+    class Serveur {
+        +Room[] rooms
+        +EtatJeu etat
+        +diffuserEvenement()
+        +creerRoom()
+    }
+
+    class Room {
+        +string code
+        +Joueur[] joueurs
+        +EtatJeu etat
+        +rejoindre()
+        +quitter()
+    }
+
+    class EtatJeu {
+        +int score
+        +int balles
+        +string statut
+        +ajouterPoints()
+        +estFinDePartie()
+    }
+
+    Playfield *-- Bille
+    Playfield *-- Flipper
+    Playfield *-- Personnage
+    Playfield --> Serveur
+    Serveur *-- Room
+    Serveur *-- EtatJeu
