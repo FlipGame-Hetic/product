@@ -143,5 +143,6 @@ Une série de cas d'usage anticipés a été ajoutée et est disponible dans le 
 - [ ] Comment afficher les instructions de capacité sans sortir le joueur de sa partie ?
 - [ ] Faut-il un système de compte / login pour le mode PvP, ou juste un code de room suffisamment court ?
 - [ ] Gestion de l'auth ws / bridge interne à mqtt ou personalisé ?
+- [ ] Gestion du multijoueur entre les différents écran ?
 
 Maxime Bidan - Arnaud Fischer - Louis Dondey - Arthure Jenck - Alexis Gontier - v1.0.0 - 17/02/26
