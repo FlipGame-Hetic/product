@@ -71,6 +71,26 @@ Une série de cas d'usage anticipés a été ajoutée et est disponible dans le 
 | CI/CD                    | GitHub Actions             | Automatisation des tests et déploiements pour garantir la qualité et la stability du code                                                              |
 | Déploiement / VPS    | Google Cloud Platform (GCP) | Avoir un contrôle sur les déploiements et les ressources disponibles, faciliter le scalling et la gestion du multijoueur                                     |
 
+<<<<<<< HEAD
+=======
+| Composant                | Techno                      | Justification                                                                                                                                           |
+| ------------------------ | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Rendu / Physique         | Three.js (R3F) + Rapier.js  | Simulation physique déterministe côté client en temps réel                                                                                              |
+| UI / Style               | TailwindCSS                 | Permet d’itérer vite sur l’interface borne et UI                                                                                                        |
+| État global              | Zustand                     | Synchronisation simple sans re-render inutiles                                                                                                          |
+| Typage                   | TypeScript                  | Typage statique pour la sécurité et la lisibilité du code                                                                                               |
+| Framework front          | React                       | Découplage clair entre rendu du monde et overlay UI (scores, effets, feedback joueur)                                                                   |
+| Backend / Logique métier | Rust                        | Serveur authoritative (gestion des ticks) capable de simuler la partie sans jitter ni pauses, avantage de la performance par rapport à un autre langage |
+| Protocole IoT            | MQTT                        | Protocole léger publish/subscribe pour l'ESP32                                                                                                          |
+| IOT/ESP32                | C++                         | Rapidité et stabilité du C++ et de ses libs                                                                                                             |
+| Temps réel front         | WebSocket                   | Transmission au serveur vers le renderer minimale                                                                                                       |
+| Cache / Pub-Sub          | Redis                       | Relais interne entre instances de simulation pour le 1v1 (multiplayer) et le cache des données                                                          |
+| Persistance              | PostgreSQL                  | Stockage fiable des scores, parties et stats compétitives                                                                                               |
+| Déploiement / DevOps     | Docker                      | Reproduire localement la stack réseau complète du flipper jusqu’au serveur multi                                                                        |
+| CI/CD                    | GitHub Actions              | Automatisation des tests et déploiements pour garantir la qualité et la stability du code                                                               |
+| Déploiement / VPS        | Google Cloud Platform (GCP) | Avoir un contrôle sur les déploiements et les ressources disponibles, faciliter le scalling et la gestion du multijoueur                                |
+| CND / Bucket             | S3 storage / CDN            | Hébergement des assets statiques (build front, textures, sons) avec CDN pour réduire la latence et améliorer les performances en multijoueur            |
+>>>>>>> f941487 (Modify cdc-technique.md)
 
 **Alternatives écartées :**
 
@@ -81,6 +101,11 @@ Une série de cas d'usage anticipés a été ajoutée et est disponible dans le 
 - `Railway` => peut être instable, facile à mettre en place mais difficilement scalable par rapport à GCP
 - `Supabase` => Facile à mettre en place mais pas adpater à nos besoin.
 - `Python`=> langage accessible, syntaxe simple, mais pas adapter à un besoin de performance élevée et de contexte d'iot en temps réel
+<<<<<<< HEAD
+=======
+- `C` => langage plus complexe et temps de développement accru pour résultat équivalent voire meilleur
+
+>>>>>>> f941487 (Modify cdc-technique.md)
 ---
 
 ## 7. Risques et contraintes
@@ -94,6 +119,7 @@ Une série de cas d'usage anticipés a été ajoutée et est disponible dans le 
 | Désynchronisation des 3 écrans en cours de partie          | Moyenne     | Fort   | Serveur autoritatif en Rust, état de jeu unique, resync automatique   |
 | Gyroscope : faux positifs de tilt                          | Haute       | Moyen  | Seuil de sensibilité calibrable, filtre logiciel côté ESP32           |
 <<<<<<< HEAD
+<<<<<<< HEAD
 | Panne de GCP                                               | Faible      | Fort   | Switch vers une backup local                                          |
 | IA trop faible/forte                                       | Moyenne     | Fort   | Entraîner l'IA avec de vrais joueurs                                  |
 | Monnayeur physique non détecté (défaut matériel)           | Moyenne     | Moyen  | Tests matériels dès S3, procédure de fallback manuel                  |
@@ -104,6 +130,13 @@ Une série de cas d'usage anticipés a été ajoutée et est disponible dans le 
 | Surcharge du serveur GCP en pic de charge PvP              | Faible      | Fort   | Redis en pub-sub, architecture stateless, load testing avant release  |
 | Rust : courbe d'apprentissage pour l'équipe                | Haute       | Moyen  | Formation S1-S2, restreindre Rust au serveur authoritative uniquement |
 >>>>>>> 44f77c1 (docs/cdc: added constraints section (#34))
+=======
+| Panne de GCP                                               | Faible      | Fort   | Switch vers une backup local                                          |
+| IA trop faible/forte                                       | Moyenne     | Fort   | Entraîner l'IA avec de vrais joueurs                                  |
+| Monnayeur physique non détecté (défaut matériel)           | Moyenne     | Moyen  | Tests matériels dès S3, procédure de fallback manuel                  |
+| Surcharge du serveur GCP en pic de charge PvP              | Faible      | Fort   | Redis en pub-sub, architecture stateless, load testing avant release  |
+| Rust : courbe d'apprentissage                              | Haute       | Moyen  | Remise à niveau                                                       |
+>>>>>>> f941487 (Modify cdc-technique.md)
 | Panne d'un écran pendant une démo                          | Faible      | Fort   | Tests de reconnexion automatique, prévoir écran de remplacement       |
 | Intégration MQTT ↔ WebSocket plus complexe que prévue      | Moyenne     | Moyen  | POC bridge MQTT/WS dès S3, découplage strict des responsabilités      |
 
