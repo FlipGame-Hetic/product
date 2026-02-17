@@ -74,18 +74,32 @@
 ---
 
 ## 6. Stack technique
+| Composant                | Techno                     | Justification                                                      |
+| ------------------------ | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Rendu / Physique         | Three.js (R3F) + Rapier.js | Simulation physique déterministe côté client en temps réel |
+| UI / Style               | TailwindCSS                | Permet d’itérer vite sur l’interface borne et UI                                      |
+| État global              | Zustand                    | Synchronisation simple sans re-render inutiles                                                        |
+| Typage                   | TypeScript                 | Typage statique pour la sécurité et la lisibilité du code                                            |
+| Framework front          | React                      | Découplage clair entre rendu du monde et overlay UI (scores, effets, feedback joueur)                                                                 |
+| Backend / Logique métier | Rust                       | Serveur authoritative (gestion des ticks) capable de simuler la partie sans jitter ni pauses, avantage de la performance par rapport à un autre langage|
+| Protocole IoT            | MQTT                       | Absorbe le bruit matériel des capteurs physiques et normalise les événements venant de l’ESP32                                                        |
+| Temps réel front         | WebSocket                  | Transmission au serveur vers le renderer minimale                                                                  |
+| Cache / Pub-Sub          | Redis                      | Relais interne entre instances de simulation pour le 1v1 (multiplayer) et le cache des données                                                         |
+| Persistance              | PostgreSQL                 | Stockage fiable des scores, parties et stats compétitives                                                                                             |
+| Déploiement / DevOps     | Docker                     | Reproduire localement la stack réseau complète du flipper jusqu’au serveur multi                                                                      |
+| CI/CD                    | GitHub Actions             | Automatisation des tests et déploiements pour garantir la qualité et la stability du code                                                              |
+| Déploiement / VPS    | Google Cloud Platform (GCP) | Avoir un contrôle sur les déploiements et les ressources disponibles, faciliter le scalling et la gestion du multijoueur                                     |
 
-| Composant        | Techno               | Justification                                     |
-| ---------------- | -------------------- | ------------------------------------------------- |
-| Rendu / Physique | Three.js + Rapier.js | Rendu 3D web natif + simulation physique réaliste |
 
 **Alternatives écartées :**
 
-- `Socket.io` → trop lourd, la lib `ws` native suffit pour notre besoin
-- `Unity` → pas web-natif, incompatible avec notre stack 3 écrans/browser
-- `Cannon.js` → plus leger que Rapier.js mais moin performant.
-- `BLE` pour l'ESP32 → latence trop variable, Serial/GPIO plus fiable en local
-
+- `Socket.io` => trop lourd, la lib `ws` native suffit pour notre besoin
+- `Unity` => pas web-natif, incompatible avec notre stack 3 écrans/browser
+- `Cannon.js` => plus leger que Rapier.js mais moin performant.
+- `BLE` pour l'ESP32 =>latence trop variable, Serial/GPIO plus fiable en local
+- `Railway` => peut être instable, facile à mettre en place mais difficilement scalable par rapport à GCP
+- `Supabase` => Facile à mettre en place mais pas adpater à nos besoin.
+- `Python`=> langage accessible, syntaxe simple, mais pas adapter à un besoin de performance élevée et de contexte d'iot en temps réel
 ---
 
 ## 7. Risques et contraintes
