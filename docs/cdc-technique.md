@@ -94,7 +94,14 @@ Une série de cas d'usage anticipés a été ajoutée et est disponible dans le 
 
 ### Git
 
-### Code
+```markdown
+- Branches : <issueId>-<type><scope>-<name> (ex: 18-featplayfield-implement physics engine) à noter, un / peut être ajouté entre le <type> et le <scope>
+- Main ne peut être supprimé
+- Commits : Conventional Commits with scope (feat/backscreen:, fix/DMD:, docs/use-cases:)
+- PR obligatoire + 1 review minimum, nouvelle review si commit plus récent, push direct sur main bloqué par ruleset même avec -force
+- Conflits : rebase sur main, resolution en binome
+- Langue : l'anglais est utilisé partout, excepté dans la documentation et les Discussions GitHub de l'organisation
+```
 
 ---
 
