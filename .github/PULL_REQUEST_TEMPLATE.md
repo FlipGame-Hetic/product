@@ -1,10 +1,10 @@
-# 🔗 Issue de base :
+# Closing keywords :
 
 related to #XXX
 
-## 🧑‍💻 Pour celui qui crée la PR
+## Assignee section
 
-### 🎯 Objectif de la PR
+### PR Goal
 
 #### Description
 
@@ -12,23 +12,18 @@ Lorem ipsum
 
 #### Checks
 
-- [ ] L’issue est liée avec un mot-clé (`related to #XXX`)
-- [ ] La PR est bien faite vers la bonne branche
-- [ ] Les checks listés dans l’issue ont été effectués
-
-### 🧪 Vérifications techniques
-
-- [ ] Build effectué sans erreur
-- [ ] Si résolution de bugs ou nouvelle feature, la PR contient moins de 250 lignes utiles
+- [ ] Issue has a closing keyword (`related to #XXX`)
+- [ ] The PR is linked to the correct target branch
+- [ ] Every check in the issue has been verified
+- [ ] No build error
+- [ ] Less than 250 useful lines when solving a bug or implementing a feature
 
 ---
 
-## 🧑‍💻 Pour celui qui fait la revue
+## Reviewer section
 
-### 🔍 Revue du code
-
-- [ ] La PR reste concise (moins de 250 lignes utiles) si cas applicable
-- [ ] Aucun code mort ou inutile (éviter les blocs commentés)
-- [ ] Pas d’impact négatif évident sur les performances
-- [ ] Checks sur l'issue de base validés
-- [ ] L’issue est bien associée avec un Closing Keyword `related to #XXX`
+- [ ] Issue has a Closing Keyword `related to #XXX`
+- [ ] Less than 250 useful lines when solving a bug or implementing a feature
+- [ ] No dead / useless code (avoid commented code blocks)
+- [ ] No huge impact on performances
+- [ ] Base issue checks have been validated
