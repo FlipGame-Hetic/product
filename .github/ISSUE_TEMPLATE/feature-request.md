@@ -7,10 +7,10 @@ assignees: ''
 
 ---
 
-### 🎯 Goal of the issue
+### Goal of the issue
 - [ ] do this
 - [ ] do that
 
-### ✅ Manual testing
+### Manual testing
 - [ ] test by doing this
 - [ ] test by doing that
