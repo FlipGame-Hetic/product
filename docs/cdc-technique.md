@@ -155,4 +155,4 @@ Une série de cas d'usage anticipés a été ajoutée et est disponible dans le 
 - [ ] Est-ce que le nombre de billes dans une partie PvP est défini à 3 ou peut être choisi par le joueur en début de partie ?
 - [ ] Si les deux joueurs finissent avec le même nombre de PV, est-ce qu'on accepte un cas d'égalité ? Nouvelle partie pour départager ?
 
-Maxime Bidan - Arnaud Fischer - Louis Dondey - Arthure Jenck - Alexis Gontier - v1.0.0 - 17/02/26
+Maxime Bidan - Arnaud Fischer - Louis Dondey - Arthure Jenck - Alexis Gontier - v1.0.0 - 18/02/26
