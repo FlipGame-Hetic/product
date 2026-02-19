@@ -131,3 +131,5 @@
 - **Seuils gyroscope** : valeurs de tilt et secousse a calibrer pendant le POC → impact sur #13 et #22
 - **Match nul PvP** : round supplementaire ou egalite acceptee ? → impact sur #35
 - **Seuil mode degrade** : quelle latence WS declenche le basculement ? → impact sur #36 et #37
+
+_Auteur : Arthur Jenck - v1.0.0 - 19/02/2026_

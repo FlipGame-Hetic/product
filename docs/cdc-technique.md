@@ -91,19 +91,19 @@ Une série de cas d'usage anticipés a été ajoutée et est disponible dans le 
 
 ### Contraintes
 
-| Risque                                                     | Probabilité | Impact | Mitigation                                                            |
-| ---------------------------------------------------------- | ----------- | ------ | --------------------------------------------------------------------- |
-| Latence WebSocket trop élevée en PvP (2 bornes distantes)  | Haute       | Fort   | POC réseau S3-S4, seuil de tolérance défini                           |
-| Physique Rapier.js difficile à calibrer (rebonds, gravité) | Haute       | Fort   | Tests dès S3, paramètres ajustables via config, itérations courtes    |
-| Désynchronisation des 3 écrans en cours de partie          | Moyenne     | Fort   | Serveur autoritatif en Rust, état de jeu unique, resync automatique   |
-| Gyroscope : faux positifs de tilt                          | Haute       | Moyen  | Seuil de sensibilité calibrable, filtre logiciel côté ESP32           |
-| Panne de GCP                                               | Faible      | Fort   | Switch vers une backup local                                          |
-| IA trop faible/forte                                       | Moyenne     | Fort   | Entraîner l'IA avec de vrais joueurs                                  |
-| Monnayeur physique non détecté (défaut matériel)           | Moyenne     | Moyen  | Tests matériels dès S3, procédure de fallback manuel                  |
-| Surcharge du serveur GCP en pic de charge PvP              | Faible      | Fort   | Redis en pub-sub, architecture stateless, load testing avant release  |
-| Rust : courbe d'apprentissage                              | Haute       | Moyen  | Remise à niveau                                                       |
-| Panne d'un écran pendant une démo                          | Faible      | Fort   | Tests de reconnexion automatique, prévoir écran de remplacement       |
-| Intégration MQTT ↔ WebSocket plus complexe que prévue      | Moyenne     | Moyen  | POC bridge MQTT/WS dès S3, découplage strict des responsabilités      |
+| Risque                                                     | Probabilité | Impact | Mitigation                                                           |
+| ---------------------------------------------------------- | ----------- | ------ | -------------------------------------------------------------------- |
+| Latence WebSocket trop élevée en PvP (2 bornes distantes)  | Haute       | Fort   | POC réseau S3-S4, seuil de tolérance défini                          |
+| Physique Rapier.js difficile à calibrer (rebonds, gravité) | Haute       | Fort   | Tests dès S3, paramètres ajustables via config, itérations courtes   |
+| Désynchronisation des 3 écrans en cours de partie          | Moyenne     | Fort   | Serveur autoritatif en Rust, état de jeu unique, resync automatique  |
+| Gyroscope : faux positifs de tilt                          | Haute       | Moyen  | Seuil de sensibilité calibrable, filtre logiciel côté ESP32          |
+| Panne de GCP                                               | Faible      | Fort   | Switch vers une backup local                                         |
+| IA trop faible/forte                                       | Moyenne     | Fort   | Entraîner l'IA avec de vrais joueurs                                 |
+| Monnayeur physique non détecté (défaut matériel)           | Moyenne     | Moyen  | Tests matériels dès S3, procédure de fallback manuel                 |
+| Surcharge du serveur GCP en pic de charge PvP              | Faible      | Fort   | Redis en pub-sub, architecture stateless, load testing avant release |
+| Rust : courbe d'apprentissage                              | Haute       | Moyen  | Remise à niveau                                                      |
+| Panne d'un écran pendant une démo                          | Faible      | Fort   | Tests de reconnexion automatique, prévoir écran de remplacement      |
+| Intégration MQTT ↔ WebSocket plus complexe que prévue      | Moyenne     | Moyen  | POC bridge MQTT/WS dès S3, découplage strict des responsabilités     |
 
 ### Contraintes
 
@@ -155,4 +155,4 @@ Une série de cas d'usage anticipés a été ajoutée et est disponible dans le 
 - [ ] Est-ce que le nombre de billes dans une partie PvP est défini à 3 ou peut être choisi par le joueur en début de partie ?
 - [ ] Si les deux joueurs finissent avec le même nombre de PV, est-ce qu'on accepte un cas d'égalité ? Nouvelle partie pour départager ?
 
-Maxime Bidan - Arnaud Fischer - Louis Dondey - Arthure Jenck - Alexis Gontier - v1.0.0 - 18/02/26
+Maxime Bidan - Arnaud Fischer - Louis Dondey - Arthur Jenck - Alexis Gontier - v1.0.0 - 18/02/26
