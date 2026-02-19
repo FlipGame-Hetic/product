@@ -1,108 +1,133 @@
-# 🎰 FlipGame — Backlog MVP
+# FlipGame — Backlog
 
-> **Légende priorités** : `P0` = bloquant / MVP core · `P1` = important pour l'expérience · `P2` = nice-to-have
-> **Légende taille** : `S` ≤ 2j · `M` 3–5j · `L` 6–10j
-> **Owners** : `Frontend` · `Backend` · `IoT` · `DevOps`
-
----
-
-## 🗓️ Sprint S1–S2 — Cadrage & Setup (Semaines 1–2)
-
-| #   | Tâche                                                                                                                                                                          | Priorité | Owner    | DoD                                                                                                  | Dépendances | Taille |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------- | -------- | ---------------------------------------------------------------------------------------------------- | ----------- | ------ |
-| 1   | Initialiser les 3 repos GitHub (repo-iot, repo-back, monorepo-front) avec conventions de branches, PR templates et branch protection                                           | P0       | DevOps   | 3 repos structurés, README présent sur chacun, branch protection activée, accès équipe configuré     | —           | S      |
-| 2   | Configurer CI/CD GitHub Actions sur chacun des 3 repos (lint, build, tests unitaires auto sur PR)                                                                              | P0       | DevOps   | Pipeline vert sur une PR de test par repo, artefacts buildés                                         | #1          | M      |
-| 3   | Provisionner le serveur GCP (instance, DNS, certificats TLS, accès SSH équipe)                                                                                                 | P0       | DevOps   | Serveur accessible via SSH par tous les membres, HTTPS opérationnel                                  | —           | M      |
-| 4   | Définir et documenter les contrats d'interface (format MQTT topics, API WebSocket JSON schema)                                                                                 | P0       | Backend  | Document `contracts/` versionné dans les repos concernés, validé par Frontend et IoT                 | —           | S      |
-| 5   | Scaffolding repo-back : structure crates Rust, dépendances Tokio/Axum/Redis, docker-compose dev inclus, hello world déployé sur GCP                                            | P0       | Backend  | Serveur Rust compile, `docker compose up` fonctionnel sur toutes les machines, répond sur GCP        | #2 #3       | M      |
-| 6   | Scaffolding monorepo-front : deux apps (Backglass, Playfield) + lib partagée (Turborepo), React + R3F + Rapier.js + Zustand + TypeScript + Tailwind, docker-compose dev inclus | P0       | Frontend | Les deux apps buildent sans erreurs, Rapier.js initialisé, lib partagée importable depuis chaque app | #2          | M      |
-| 7   | Scaffolding repo-iot : firmware ESP32 de base, connexion Wi-Fi, publication MQTT premier message, procédure de flash documentée                                                | P0       | IoT      | Message MQTT reçu côté backend sur topic de test, flash reproductible par n'importe quel membre      | #4          | M      |
+> **Legendes priorites** : `P0` = bloquant / MVP core · `P1` = important pour l'experience · `P2` = nice-to-have
+> **Legendes taille** : `XS` < 1j · `S` 1–2j · `M` 3–5j · `L` 6–10j
+> **Owners** : `Frontend` · `Backend` · `IoT` · `DevOps` · `Equipe`
 
 ---
 
-## 🗓️ Sprint S3–S4 — POC Technique (Semaines 3–4)
-
-| #   | Tâche                                                                                            | Priorité | Owner              | DoD                                                                                     | Dépendances | Taille |
-| --- | ------------------------------------------------------------------------------------------------ | -------- | ------------------ | --------------------------------------------------------------------------------------- | ----------- | ------ |
-| 9   | POC physique Rapier.js : bille, gravité, flippers articulés, rebonds sur bumpers                 | P0       | Frontend           | Bille se comporte de façon réaliste, les flippers bougent en réponse à un input clavier | #6          | L      |
-| 10  | POC WebSocket Rust : connexion client, envoi/réception de messages JSON, ping/pong               | P0       | Backend            | Client de test envoie un message et reçoit une réponse structurée en < 50ms local       | #5          | M      |
-| 11  | POC MQTT IoT → Backend : lecture des 2 boutons flippers physiques et transmission en temps réel  | P0       | IoT                | Appui physique sur flipper gauche/droite → event reçu côté backend en < 30ms            | #7 #4       | M      |
-| 12  | Intégration inputs physiques → moteur physique frontend (bridge IoT → WS → R3F)                  | P0       | Frontend + Backend | Appui sur flipper physique fait bouger le flipper dans le rendu 3D                      | #9 #10 #11  | L      |
-| 13  | Setup PostgreSQL : schéma initial (sessions, scores, joueurs) + migrations automatisées          | P1       | Backend            | Migrations s'appliquent proprement au démarrage du container, schéma validé             | #5          | M      |
-| 14  | Synchronisation 3 écrans : détection des displays, affichage ciblé (Playfield / Backglass / DMD) | P0       | Frontend           | Chaque écran affiche le bon contenu sans conflit, testé sur 2 moniteurs minimum         | #6          | M      |
-| 15  | Calibration gyroscope ESP32 : détection de tilt (seuils à définir)                               | P1       | IoT                | Un tilt physique déclenche un event MQTT distinct des inputs flippers                   | #7          | S      |
+# MVP — Semaines 1 a 8
 
 ---
 
-## 🗓️ Sprint S5–S8 — Core PvE Loop (Semaines 5–8)
+## Sprint S1–S2 — Cadrage, Setup & RnD (Semaines 1–2)
 
-| #   | Tâche                                                                                          | Priorité | Owner              | DoD                                                                                    | Dépendances | Taille |
-| --- | ---------------------------------------------------------------------------------------------- | -------- | ------------------ | -------------------------------------------------------------------------------------- | ----------- | ------ |
-| 16  | Monnayeur : détection insertion pièce via ESP32 → démarrage session PvE                        | P0       | IoT + Backend      | Insertion pièce → session créée en BDD → frontend reçoit l'event de démarrage          | #11 #13     | M      |
-| 17  | Écran menu principal (idle) : affichage sur Backglass, animation attract mode                  | P1       | Frontend           | Menu animé affiché en l'absence de session active, disparaît à l'insertion d'une pièce | #14         | M      |
-| 18  | Écran choix de personnage : 4 personnages affichés, sélection via boutons de navigation        | P0       | Frontend           | Joueur peut sélectionner un personnage en < 10s, buff/malus affichés, choix confirmé   | #14 #12     | M      |
-| 19  | Système de vies : 3 vies par partie, détection perte de bille, affichage sur DMD               | P0       | Frontend + Backend | Perte de bille → vie retirée → affichage mis à jour → game over si 0 vie               | #9 #12      | M      |
-| 20  | Gestion du tilt en jeu : pénalité (perte de vie ou score) + animation Backglass                | P1       | Frontend + IoT     | Tilt détecté → pénalité appliquée → feedback visuel immédiat                           | #15 #19     | S      |
-| 21  | Système de score : comptage en temps réel, affichage sur DMD, persistance en BDD               | P0       | Frontend + Backend | Score s'incrémente correctement, stocké en BDD à fin de session                        | #13 #19     | M      |
-| 22  | Plunger : lecture analogique de la force d'éjection ESP32 → lancement de bille proportionnel   | P0       | IoT + Frontend     | Plunger tiré à 50% → bille éjectée à ~50% de la force max, testé sur 3 niveaux         | #12         | M      |
-| 23  | Boss 1 — structure : HP bar, logique de dégâts (points flipper → HP boss), conditions victoire | P0       | Frontend + Backend | Boss 1 perd des HP proportionnellement au score du joueur, passage au boss 2 déclenché | #21         | L      |
+| #   | Tache                                                                                                                                                                                  | Priorite | Owner    | DoD                                                                                                                             | Dependances | Taille |
+| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | -------- | ------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------ |
+| 1   | Initialiser les 3 repos GitHub (repo-iot, repo-back, monorepo-front) avec conventions de branches, PR templates et branch protection                                                   | P0       | DevOps   | 3 repos structures, README present sur chacun, branch protection activee, acces equipe configure                                | —           | XS     |
+| 2   | Configurer CI/CD GitHub Actions sur chacun des 3 repos (lint, build, tests unitaires auto sur PR)                                                                                      | P0       | DevOps   | Pipeline vert sur une PR de test par repo, artefacts buildes                                                                    | #1          | M      |
+| 3   | Definir et documenter les contrats d'interface (format MQTT topics, API WebSocket JSON schema)                                                                                         | P0       | Backend  | Document `contracts/` versionne dans les repos concernes, valide par Frontend et IoT                                            | —           | S      |
+| 4   | Scaffolding repo-back : structure crates Rust, dependances Tokio/Axum/Redis, Swagger documente, docker-compose dev inclus                                                              | P0       | Backend  | Serveur Rust compile, `docker compose up` fonctionnel sur toutes les machines, Swagger accessible en local                      | #2          | M      |
+| 5   | Scaffolding monorepo-front : deux apps (Backglass, Playfield) + lib partagee (Turborepo), React + R3F + Rapier.js + Zustand + TypeScript + Tailwind, deploiement temporaire sur Vercel | P0       | Frontend | Les deux apps buildent sans erreurs, Rapier.js initialise, lib partagee importable depuis chaque app, preview Vercel accessible | #2          | M      |
+| 6   | Scaffolding repo-iot : firmware ESP32 de base, connexion Wi-Fi, publication MQTT premier message, procedure de flash documentee                                                        | P0       | IoT      | Message MQTT recu cote backend sur topic de test, flash reproductible par n'importe quel membre                                 | #3          | M      |
+| 7   | RnD Game Design & Direction Artistique : brainstorming gameplay, regles du boss unique MVP, comportement de la bille, feedback visuels cibles, references DA cyberpunk                 | P0       | Equipe   | Document de game design MVP valide (plateau, 1 boss, 1 perso, mecanique d'ulti), moodboard DA produit                           | —           | L      |
 
----
-
-## 🗓️ Sprint S9–S12 — Boss, Ultimes & PvP Core (Semaines 9–12)
-
-| #   | Tâche                                                                                            | Priorité | Owner              | DoD                                                                                        | Dépendances | Taille |
-| --- | ------------------------------------------------------------------------------------------------ | -------- | ------------------ | ------------------------------------------------------------------------------------------ | ----------- | ------ |
-| 24  | Boss 2 & Boss 3 — implémentation complète (design mécanique différencié par boss)                | P1       | Frontend + Backend | Les 3 boss sont jouables à la suite, chacun avec un comportement distinct                  | #23         | L      |
-| 25  | Système d'ultime : détection combinaison de boutons (haut gauche + haut droite), jauge d'ultime  | P0       | Frontend + IoT     | Combinaison détectée → ultime déclenché si jauge pleine → effet appliqué                   | #12 #18     | M      |
-| 26  | Buffs/malus par personnage : implémentation des 4 modificateurs de gameplay                      | P1       | Frontend + Backend | Chaque personnage modifie effectivement le gameplay (vitesse, dégâts, etc.) selon sa fiche | #18 #23     | M      |
-| 27  | Lobby PvP — création de room : génération code 4 chiffres, attente adversaire                    | P0       | Backend            | Code généré → room créée en Redis → état "waiting" visible sur frontend                    | #10 #13     | M      |
-| 28  | Lobby PvP — rejoindre une room : saisie code via boutons de navigation, connexion WS             | P0       | Frontend + Backend | Joueur 2 entre code → rejoint la room → les 2 joueurs voient "Match ready"                 | #27 #18     | M      |
-| 29  | Match PvP — synchronisation temps réel : score joueur → dégâts adversaire via WS + Redis pub-sub | P0       | Backend            | Score J1 publié → J2 reçoit les dégâts en < 100ms, testé avec latence réseau simulée       | #27 #10     | L      |
-| 30  | Match PvP — affichage HP adversaire en temps réel sur le Backglass                               | P1       | Frontend           | HP de l'adversaire se mettent à jour en < 200ms, sans freeze du rendu 3D                   | #29 #14     | M      |
-| 31  | Gestion déconnexion en PvP : forfait automatique si déconnexion > 5s                             | P1       | Backend            | Déconnexion simulée → l'adversaire gagne après timeout, état proprement nettoyé en Redis   | #29         | S      |
+> **Note** : La tache #7 est transversale et non assignee a un seul role. Elle conditionne les choix techniques des sprints suivants et doit etre finalisee avant la fin de S2.
 
 ---
 
-## 🗓️ Sprint S13–S16 — Finalisation Gameplay & Robustesse (Semaines 13–16)
+## Sprint S3–S4 — POC & Integration physique (Semaines 3–4)
 
-| #   | Tâche                                                                                         | Priorité | Owner              | DoD                                                                                   | Dépendances | Taille |
-| --- | --------------------------------------------------------------------------------------------- | -------- | ------------------ | ------------------------------------------------------------------------------------- | ----------- | ------ |
-| 32  | Fin de partie PvE : écran de score final, leaderboard, retour menu                            | P1       | Frontend + Backend | Game over → score affiché sur DMD → top 5 scores chargés depuis BDD → retour idle     | #21 #17     | M      |
-| 33  | Fin de partie PvP : affichage gagnant/perdant sur les 2 bornes simultanément                  | P1       | Frontend + Backend | Les 2 bornes affichent le résultat cohérent en < 500ms après l'événement final        | #29 #32     | M      |
-| 34  | Mode dégradé réseau : basculement si latence WS > seuil (à définir) avec feedback utilisateur | P2       | Backend + Frontend | Latence > seuil → mode dégradé activé → UI prévient le joueur, partie non interrompue | #29         | M      |
-| 35  | Anti-cheat serveur : validation des scores côté Rust (limites de score par cycle physique)    | P1       | Backend            | Score impossible (ex. +10 000 en 1 cycle) rejeté, log d'anomalie enregistré           | #21 #29     | M      |
-| 36  | Tests de charge WebSocket : simulation 2 clients simultanés, mesure latence p95               | P1       | DevOps + Backend   | p95 latence < 100ms sur GCP avec 2 sessions simultanées, rapport de test produit      | #29 #4      | M      |
-| 37  | Calibration finale Rapier.js : ajustement gravité, masse bille, restitution flippers          | P0       | Frontend           | Playtest de 30min sans comportement physique aberrant, paramètres documentés          | #9          | M      |
-| 38  | Optimisation rendering 3 écrans : 60fps stable sur le hardware cible                          | P1       | Frontend           | 60fps maintenus sur les 3 écrans simultanément pendant une session PvE complète       | #14 #9      | M      |
-| 39  | Gestion match nul PvP (round supplémentaire ou égalité — à trancher)                          | P2       | Backend + Frontend | Comportement défini et implémenté, testé sur scénario de score identique              | #33         | S      |
+> **Note** : Le POC MQTT/WS est une validation technique rapide (1–2 jours en debut de S3). Le reste du sprint est consacre a l'integration et a la physique.
 
----
-
-## 🗓️ Sprint S17–S18 — Polish & Soutenance (Semaines 17–18)
-
-| #   | Tâche                                                                              | Priorité | Owner            | DoD                                                                                     | Dépendances  | Taille |
-| --- | ---------------------------------------------------------------------------------- | -------- | ---------------- | --------------------------------------------------------------------------------------- | ------------ | ------ |
-| 40  | Animations Backglass thème cyberpunk (boss attacks, transitions, idle)             | P2       | Frontend         | Animations jouées aux bons moments, sans impact sur les performances du Playfield       | #24          | M      |
-| 41  | Sound design : sons flippers, bumpers, boss, ultime (Web Audio API ou fichiers)    | P2       | Frontend         | Sons déclenchés en < 20ms après l'event correspondant                                   | #23 #25      | M      |
-| 42  | Playtests complets : 5 sessions PvE + 3 sessions PvP, correction bugs bloquants    | P0       | Toute l'équipe   | Aucun bug P0 ouvert, liste des bugs P1/P2 connue et priorisée                           | Toutes P0/P1 | L      |
-| 43  | Documentation technique finale (architecture, API, MQTT topics, guide déploiement) | P1       | DevOps + Backend | Doc dans `/docs`, relue par 2 membres, build Docker reproductible depuis zéro documenté | —            | M      |
-| 44  | Démo day : build de prod déployé sur GCP, borne testée en conditions réelles       | P0       | DevOps           | Build stable déployé, borne physique fonctionnelle pour la soutenance                   | #42 #43      | M      |
+| #   | Tache                                                                                                                                                         | Priorite | Owner                    | DoD                                                                                               | Dependances | Taille |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ------------------------ | ------------------------------------------------------------------------------------------------- | ----------- | ------ |
+| 8   | POC MQTT/WS : valider le pipeline complet ESP32 → MQTT → Rust → WebSocket → frontend sur un input et un affichage de test                                     | P0       | IoT + Backend + Frontend | Message envoye depuis l'ESP32 visible dans le rendu frontend en < 50ms, pipeline documente        | #4 #5 #6    | S      |
+| 9   | Integration complete des inputs physiques : 2 boutons gauche, 2 boutons droite, 3 boutons verticaux, plunger solenoid, gyroscope (tilt + secousse), monnayeur | P0       | IoT                      | Chaque input genere un event MQTT distinct et correctement type, recu cote backend en < 30ms      | #6 #3       | L      |
+| 10  | Moteur physique Rapier.js : bille, gravite, flippers articules, rebonds sur bumpers                                                                           | P0       | Frontend                 | Bille se comporte de facon realiste, les flippers repondent aux inputs clavier en attendant l'IoT | #5          | L      |
+| 11  | Synchronisation 3 ecrans : detection des displays, routage Playfield / Backglass / DMD                                                                        | P0       | Frontend                 | Chaque ecran affiche le bon contenu sans conflit, teste sur 2 moniteurs minimum                   | #5          | M      |
+| 12  | Bridge IoT → WS → moteur physique : les inputs physiques pilotent le rendu 3D en temps reel                                                                   | P0       | Frontend + Backend       | Appui sur un flipper physique fait bouger le flipper dans le rendu 3D                             | #9 #10 #11  | M      |
+| 13  | Calibration gyroscope : seuils de tilt et secousse definis avec le game design, events MQTT distincts des autres inputs                                       | P1       | IoT                      | Tilt et secousse declenchent des events separes, seuils documentes                                | #9 #7       | S      |
 
 ---
 
-## 📊 Récapitulatif
+## Sprint S5–S6 — Boucle PvE core (Semaines 5–6)
 
-| Priorité  | Nombre de tâches |
-| --------- | ---------------- |
-| **P0**    | 19               |
-| **P1**    | 17               |
-| **P2**    | 5                |
-| **Total** | **41**           |
+| #   | Tache                                                                                                | Priorite | Owner              | DoD                                                                                                      | Dependances | Taille |
+| --- | ---------------------------------------------------------------------------------------------------- | -------- | ------------------ | -------------------------------------------------------------------------------------------------------- | ----------- | ------ |
+| 14  | Monnayeur : insertion piece → demarrage session PvE                                                  | P0       | IoT + Backend      | Insertion piece → session initiee → frontend recoit l'event de demarrage                                 | #9          | S      |
+| 15  | Ecran menu (idle) : affichage simple sur Backglass en attente de piece                               | P1       | Frontend           | Menu affiche en l'absence de session, disparait a l'insertion d'une piece                                | #11         | S      |
+| 16  | Ecran choix de personnage : 1 personnage MVP, selection via boutons de navigation                    | P0       | Frontend           | Joueur confirme son choix en < 10s, ulti du personnage affiche, choix transmis au backend                | #12 #11     | M      |
+| 17  | Systeme de vies : 3 vies par partie, detection perte de bille, affichage sur DMD                     | P0       | Frontend + Backend | Perte de bille → vie retiree → affichage mis a jour → game over si 0 vie                                 | #10 #12     | M      |
+| 18  | Systeme de score : comptage en temps reel, affichage sur DMD, persistance localStorage               | P0       | Frontend           | Score s'incremente correctement, sauvegarde en localStorage a fin de session                             | #17         | M      |
+| 19  | Boss unique MVP : HP bar, degats (points flipper → HP boss), conditions victoire, sprite placeholder | P0       | Frontend + Backend | Boss perd des HP proportionnellement au score, victoire declenchee quand HP = 0, affichage sur Backglass | #18 #7      | L      |
+| 20  | Fin de partie MVP : ecran game over ou victoire, score final, retour menu idle                       | P0       | Frontend           | Resultat affiche, score sauvegarde en localStorage, retour idle apres delai ou clic                      | #18 #19     | S      |
 
-### Questions ouvertes à trancher avant S5
+---
 
-- **Regagner une vie en PvE** : score seuil, zone spéciale sur le plateau, ou boss vaincu ? → impact sur #19 et #23
-- **Nombre de billes en PvP** : fixe (3) ou configurable à la création de la room ? → impact sur #27
-- **Match nul PvP** : round supplémentaire ou égalité acceptée ? → impact sur #39
-- **Seuil mode dégradé** : quelle latence WS déclenche le basculement ? → impact sur #34 et #36
+## Sprint S7–S8 — Ulti, calibration & validation MVP (Semaines 7–8)
+
+| #   | Tache                                                                                                             | Priorite | Owner          | DoD                                                                                     | Dependances   | Taille |
+| --- | ----------------------------------------------------------------------------------------------------------------- | -------- | -------------- | --------------------------------------------------------------------------------------- | ------------- | ------ |
+| 21  | Systeme d'ulti : jauge, detection combinaison boutons bas gauche + bas droite, declenchement et effet sur le boss | P0       | Frontend + IoT | Combinaison detectee → ulti declenche si jauge pleine → effet visible sur le boss       | #12 #16 #19   | M      |
+| 22  | Gestion du tilt en jeu : penalite selon game design (vie ou score) + feedback visuel sur Backglass                | P1       | Frontend + IoT | Tilt detecte → penalite appliquee → feedback immediat                                   | #13 #17       | S      |
+| 23  | Calibration finale Rapier.js : gravite, masse bille, restitution flippers, ajustements post-playtest              | P0       | Frontend       | Playtest de 30min sans comportement physique aberrant, parametres documentes            | #10           | M      |
+| 24  | Playtests MVP : sessions completes de la boucle PvE, correction des bugs bloquants                                | P0       | Equipe         | Aucun bug P0 ouvert, boucle complete jouable de l'insertion de piece a la fin de partie | Toutes MVP P0 | M      |
+
+---
+
+# Post-MVP — Semaines 9 a 18
+
+---
+
+## Phase 1 Post-MVP — Infrastructure & Contenu (Semaines 9–12)
+
+> Priorite : poser les fondations techniques stables et enrichir le contenu de jeu avant d'attaquer le multi.
+
+| #   | Tache                                                                                                       | Priorite | Owner              | DoD                                                                                            | Dependances | Taille |
+| --- | ----------------------------------------------------------------------------------------------------------- | -------- | ------------------ | ---------------------------------------------------------------------------------------------- | ----------- | ------ |
+| 25  | Deploiement GCP : provisioning serveur, DNS, TLS, pipeline de deploiement continu                           | P0       | DevOps             | Serveur accessible publiquement en HTTPS, deploiement automatise depuis main                   | —           | M      |
+| 26  | Migration localStorage → PostgreSQL : schema BDD (sessions, scores, joueurs), migrations auto               | P0       | Backend            | Migrations appliquees au demarrage, localStorage remplace par appels BDD, donnees persistantes | #25         | M      |
+| 27  | RnD & creation d'assets : benchmark pipeline 3D/illustration/son, production des premiers assets definitifs | P0       | Equipe             | Pipeline de production d'assets defini, premiers livrables valides par l'equipe                | #7          | L      |
+| 28  | Integration assets finales DA : plateau, boss 1, personnage 1, animations de base                           | P0       | Frontend           | Assets definitives integrees en remplacement des placeholders, sans regression sur les perfs   | #27         | L      |
+| 29  | Boss 2 et Boss 3 : mecaniques differenciees, assets, conditions de victoire                                 | P0       | Frontend + Backend | Les 3 boss sont jouables a la suite avec des comportements distincts                           | #28         | L      |
+| 30  | 5 personnages jouables : ajout des 4 personnages restants avec buff et malus distincts                      | P0       | Frontend + Backend | Chaque personnage modifie effectivement le gameplay, selectionnable depuis l'ecran de choix    | #28         | L      |
+| 31  | Anti-cheat serveur : validation des scores cote Rust, detection de valeurs impossibles, logs                | P1       | Backend            | Score aberrant rejete, log d'anomalie enregistre, aucun impact sur le gameplay normal          | #26         | M      |
+
+---
+
+## Phase 2 Post-MVP — Multijoueur PvP (Semaines 12–16)
+
+| #   | Tache                                                                                                     | Priorite | Owner              | DoD                                                                                           | Dependances | Taille |
+| --- | --------------------------------------------------------------------------------------------------------- | -------- | ------------------ | --------------------------------------------------------------------------------------------- | ----------- | ------ |
+| 32  | Lobby PvP : creation de room par code 4 chiffres, attente adversaire                                      | P0       | Backend            | Code genere → room creee → etat "waiting" visible sur frontend, expiration si pas de joueur 2 | #25 #26     | M      |
+| 33  | Rejoindre une room : saisie code via boutons de navigation, connexion WS                                  | P0       | Frontend + Backend | Joueur 2 entre le code → rejoint la room → les 2 joueurs voient "Match ready"                 | #32         | M      |
+| 34  | Match PvP temps reel : score J1 → degats J2 via WS + Redis pub-sub, affichage HP adversaire sur Backglass | P0       | Backend + Frontend | Score publie → adversaire recoit les degats en < 100ms, HP affiches en temps reel             | #33         | L      |
+| 35  | Gestion fin de match PvP : gagnant/perdant sur les 2 bornes, gestion deconnexion et match nul             | P1       | Backend + Frontend | Resultat coherent affiche sur les 2 bornes en < 500ms apres l'event final                     | #34         | M      |
+| 36  | Mode degrade reseau : basculement si latence WS > seuil defini, feedback utilisateur                      | P1       | Backend + Frontend | Latence > seuil → mode degrade active → UI informe le joueur, partie non interrompue          | #34         | M      |
+| 37  | Tests de charge WS : simulation 2 clients simultanes, mesure latence p95                                  | P1       | DevOps + Backend   | p95 latence < 100ms sur GCP avec 2 sessions actives                                           | #34 #25     | M      |
+
+---
+
+## Phase 3 Post-MVP — Polish & Soutenance (Semaines 16–18)
+
+| #   | Tache                                                                                                | Priorite | Owner    | DoD                                                                   | Dependances     | Taille |
+| --- | ---------------------------------------------------------------------------------------------------- | -------- | -------- | --------------------------------------------------------------------- | --------------- | ------ |
+| 38  | Optimisation rendering : 60fps stables sur les 3 ecrans en session complete                          | P1       | Frontend | 60fps maintenus sur les 3 ecrans pendant une session PvE complete     | Toutes frontend | M      |
+| 39  | Sound design (si enceintes disponibles) : sons flippers, bumpers, boss, ulti (< 20ms de latence)     | P2       | Frontend | Sons declenches au bon moment sans impact sur les perfs               | #28             | M      |
+| 40  | Animations Backglass : animations thematiques pour les evenements de jeu (boss attacks, transitions) | P2       | Frontend | Animations jouees aux bons moments sans regression perfs              | #28             | M      |
+| 41  | Playtests finaux : 5 sessions PvE + 3 sessions PvP, correction bugs avant soutenance                 | P0       | Equipe   | Aucun bug P0 ouvert, liste P1/P2 connue et documentee                 | Toutes P0       | M      |
+| 42  | Build de prod et validation borne : deploiement stable sur GCP, borne testee en conditions reelles   | P0       | DevOps   | Build stable deploye, borne physique fonctionnelle pour la soutenance | #41             | M      |
+
+---
+
+## Recapitulatif
+
+| Phase                      | Taches P0 | Taches P1 | Taches P2 | Total  |
+| -------------------------- | --------- | --------- | --------- | ------ |
+| MVP (S1–S8)                | 16        | 5         | 0         | 21     |
+| Post-MVP Phase 1 (S9–S12)  | 4         | 1         | 0         | 5      |
+| Post-MVP Phase 2 (S12–S16) | 3         | 3         | 0         | 6      |
+| Post-MVP Phase 3 (S16–S18) | 2         | 1         | 2         | 5      |
+| **Total**                  | **25**    | **10**    | **2**     | **37** |
+
+---
+
+## Questions ouvertes (a trancher avant S5)
+
+- **Penalite tilt** : perte de vie ou malus de score ? → impact sur #22
+- **Condition regagner une vie en PvE** : prevu ou hors scope MVP ?
+- **Combinaison exacte de l'ulti** : boutons bas gauche + bas droite a confirmer avec l'IoT → impact sur #21
+- **Seuils gyroscope** : valeurs de tilt et secousse a calibrer pendant le POC → impact sur #13 et #22
+- **Match nul PvP** : round supplementaire ou egalite acceptee ? → impact sur #35
+- **Seuil mode degrade** : quelle latence WS declenche le basculement ? → impact sur #36 et #37
