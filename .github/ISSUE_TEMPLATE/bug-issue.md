@@ -20,3 +20,5 @@ assignees: ''
 
 - [ ] test by doing this
 - [ ] test by doing that
+
+**⚠️ After creating the issue, make sure to specify its Priority and Size in the project.**
