@@ -1,0 +1,55 @@
+flowchart TD
+    Capteurs["**Capteurs**
+    - Boutons
+    - Plunger
+    - Gyroscope
+    - Monnayeur
+    - WiFi"]
+
+    Actionneurs1["**Actionneurs**
+    - Dots Matrix Display
+    - Moteurs pour vibrations"]
+
+    ESP["**Traitement**
+    Esp32-s3
+    - Lecture capteurs
+    - Logique temps réel
+    - Pré-traitement données"]
+
+    PC["**Traitement**
+    Pc (rtx 5060 ou équivalent + 32go ram)
+    - Physique du jeu
+    - Rendu graphique"]
+
+    Cloud["**Cloud Infra**
+    Google Cloud
+    - Storage
+    - BDD
+    - (Vertex AI)"]
+
+    UI["**UI / Interface**
+    - Ecrans flipper
+    - App Web"]
+
+    Actionneurs2["**Actionneurs**
+    - Enceintes"]
+
+    Capteurs -->|"GPIO / ADC / I2C
+    200Hz"| ESP
+    ESP -->|"PWM / GPIO / DAC
+    200Hz"| Actionneurs1
+    ESP -->|"WiFi / MQTT
+    200Hz"| Comm
+
+    Comm["**Communication**
+    Broker MQTT (Mosquitto)
+    Bridge Rust
+    - Deserialisation JSON
+    - Validation / filtrage
+    - Transmission vers PC"]
+
+    Comm -->|"WebSocket
+    JSON / 200Hz"| PC
+    PC <-->|"API calls"| Cloud
+    PC -->|"HDMI"| UI
+    PC -->|"Audio (jack/usb)"| Actionneurs2
