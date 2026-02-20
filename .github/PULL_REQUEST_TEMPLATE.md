@@ -12,7 +12,7 @@ Write description here...
 
 #### Checks
 
-- [ ] Issue has a closing keyword (`related to #XXX`)
+- [ ] Issue has a closing keyword (`Closes #XXX`)
 - [ ] Less than 250 useful lines when solving a bug or implementing a feature
 - [ ] The PR is linked to the correct target branch
 - [ ] Every check in the issue has been verified
@@ -22,7 +22,7 @@ Write description here...
 
 ## Reviewer section
 
-- [ ] Issue has a Closing Keyword `related to #XXX`
+- [ ] Issue has a Closing Keyword `Closes #XXX`
 - [ ] Less than 250 useful lines when solving a bug or implementing a feature
 - [ ] The PR is linked to the correct target branch
 - [ ] Base issue checks have been validated
