@@ -36,3 +36,5 @@ The S3–S4 POC is local. It does not validate the GCP + 2 remote cabinets scena
 **Risk 3 — Ability balancing**
 5 characters land in S9–S12, too late to iterate. A broken ability during the demo = bad impression.
 → Plan B: freeze risky abilities (invisible, black hole) out of demo scope — only ship what is testable in under 1 hour of playtesting.
+
+Alexis Gontier - Arthur Jenck - Maxime Bidan - v1.0.0 - 20/02/26
