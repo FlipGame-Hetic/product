@@ -1,0 +1,60 @@
+sequenceDiagram
+    participant B1 as Bridge J1
+    participant SRV as Serveur
+    participant B2 as Bridge J2
+    participant PF1 as Playfield J1
+    participant BG1 as Backglass J1
+    participant PF2 as Playfield J2
+    participant BG2 as Backglass J2
+
+    Note over B1,BG2: Démarrage du match PvP
+
+    SRV->>B1: WebSocket match_start (countdown)
+    SRV->>B2: WebSocket match_start (countdown)
+    B1->>PF1: lancer bille J1
+    B1->>BG1: afficher HP adversaire J2
+    B2->>PF2: lancer bille J2
+    B2->>BG2: afficher HP adversaire J1
+
+    Note over B1,BG2: J1 touche un bumper → dégâts sur J2
+
+    B1->>SRV: WebSocket bumper_touché 100pts (J1)
+    SRV->>SRV: score J1 → dégâts HP J2
+    SRV->>PF1: WebSocket maj_score_J1
+    SRV->>BG1: WebSocket hp_J2 mis à jour
+    SRV->>PF2: WebSocket hp_J2 mis à jour
+    SRV->>BG2: WebSocket hp_J2 mis à jour
+
+    Note over B1,BG2: J1 active son ultime
+
+    B1->>SRV: WebSocket ultime_déclenché (J1)
+    SRV->>SRV: burst dégâts → HP J2 -= burst
+    SRV->>PF1: WebSocket animation_ultime + barreUltime_reset
+    SRV->>BG1: WebSocket hp_J2 mis à jour (burst)
+    SRV->>PF2: WebSocket hp_J2 mis à jour (burst)
+    SRV->>BG2: WebSocket hp_J2 mis à jour (burst)
+
+    Note over B1,BG2: J2 perd sa dernière bille
+
+    B2->>SRV: WebSocket bille_perdue (J2)
+    SRV->>SRV: vies J2-- → 0
+
+    alt J1 a encore des vies
+        SRV->>BG2: WebSocket attente_adversaire
+        SRV->>BG1: WebSocket adversaire_hors_jeu
+    else les deux joueurs à 0 vies
+        SRV->>SRV: vainqueur = HP adversaire le plus bas
+        SRV->>PF1: WebSocket résultat (victoire / défaite)
+        SRV->>BG1: WebSocket résultat + score_final_J1
+        SRV->>PF2: WebSocket résultat (victoire / défaite)
+        SRV->>BG2: WebSocket résultat + score_final_J2
+    end
+
+    opt Déconnexion en cours de partie
+        B2--xSRV: connexion perdue
+        Note over SRV: délai de grâce → forfait J2
+        SRV->>BG1: WebSocket victoire_par_forfait
+        SRV->>BG2: WebSocket déconnexion_détectée
+    end
+
+%%  v1.0.0 - 23/02/26

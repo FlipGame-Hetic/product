@@ -1,0 +1,67 @@
+sequenceDiagram
+    participant ESP as ESP32
+    participant MQTT as Mosquitto Broker
+    participant BRIDGE as Rust Bridge
+    participant SRV as Serveur
+    participant PF as Playfield
+    participant BG as Backglass
+    participant DMD as DMD
+
+    Note over ESP,DMD: Joueur appuie sur le flipper
+
+    ESP->>MQTT: pub flipper_appuyé
+    MQTT->>BRIDGE: sub flipper_appuyé
+    BRIDGE->>BRIDGE: feedback haptique local
+    BRIDGE->>MQTT: pub vibration + son
+    MQTT->>ESP: sub vibration + son
+    BRIDGE->>SRV: WebSocket flipper_appuyé
+
+    SRV->>PF: WebSocket activer_flipper
+    PF->>PF: Rapier.js applique force
+
+    Note over PF,DMD: Collision avec bumper
+
+    PF->>SRV: WebSocket bumper_touché 100pts
+    SRV->>SRV: maj score + calcul dégâts boss
+    SRV->>BG: WebSocket maj_score + hp_boss
+    SRV->>DMD: WebSocket maj_score
+    SRV->>BRIDGE: WebSocket bumper_touché
+    BRIDGE->>MQTT: pub déclencher_solénoïde
+    MQTT->>ESP: sub déclencher_solénoïde
+    ESP->>ESP: active solénoïde
+
+    Note over ESP,DMD: Joueur charge et déclenche son ultime
+
+    ESP->>MQTT: pub flippers_maintenus
+    MQTT->>BRIDGE: sub flippers_maintenus
+    BRIDGE->>SRV: WebSocket flippers_maintenus
+    SRV->>SRV: barreUltime = 100% → prêt
+    SRV->>BG: WebSocket ultime_pret (animation)
+    SRV->>DMD: WebSocket ultime_pret
+
+    ESP->>MQTT: pub flippers_relachés
+    MQTT->>BRIDGE: sub flippers_relachés
+    BRIDGE->>SRV: WebSocket ultime_déclenché
+    SRV->>SRV: burst dégâts → HP boss -= burst
+    SRV->>BG: WebSocket animation_ultime + hp_boss
+    SRV->>DMD: WebSocket hp_boss + barreUltime_reset
+    SRV->>PF: WebSocket animation_ultime
+
+    Note over ESP,DMD: Bille perdue
+
+    ESP->>MQTT: pub bille_perdue
+    MQTT->>BRIDGE: sub bille_perdue
+    BRIDGE->>SRV: WebSocket bille_perdue
+    SRV->>SRV: décrémente vies
+    SRV->>DMD: WebSocket maj_vies
+
+    alt vies > 0
+        SRV->>PF: WebSocket replaçer_bille
+        SRV->>BG: WebSocket reprendre_partie
+    else dernière vie perdue
+        SRV->>PF: WebSocket game_over
+        SRV->>BG: WebSocket game_over
+        SRV->>DMD: WebSocket game_over
+    end
+
+%%  Alexis Gontier - v1.1.0 - 23/02/26
