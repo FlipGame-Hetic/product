@@ -1,14 +1,40 @@
-graph LR
+graph TD
     J([Joueur])
+    S([Système])
 
-    J --> UC1[UC-01 Démarrer une partie]
-    J --> UC2[UC-02 Choisir un personnage]
-    J --> UC3[UC-03 Jouer en PvE]
-    J --> UC4[UC-04 Affronter un boss]
-    J --> UC5[UC-05 Activer son ultime]
-    J --> UC6[UC-06 Perdre une bille]
-    J --> UC7[UC-07 Tilt]
-    J --> UC8[UC-08 Match PvP]
-    J --> UC9[UC-09 Terminer une partie]
+    subgraph FlipGame
+        UC1["UC-01\nDémarrer une partie"]
+        UC2["UC-02\nChoisir un personnage"]
+        UC3["UC-03\nJouer en PvE"]
+        UC4["UC-04\nAffronter un boss"]
+        UC5["UC-05\nActiver son ultime"]
+        UC6["UC-06\nPerdre une bille"]
+        UC7["UC-07\nTilt"]
+        UC8["UC-08\nMatch PvP"]
+        UC9["UC-09\nTerminer une partie"]
+    end
 
-%%  Alexis Gontier - v1.0.0 - 17/02/26
+    J --> UC3
+    J --> UC8
+    J --> UC5
+    J --> UC7
+    S --> UC9
+
+    UC3 -.->|<<include>>| UC1
+    UC3 -.->|<<include>>| UC2
+    UC3 -.->|<<include>>| UC4
+    UC3 -.->|<<include>>| UC9
+
+    UC5 -.->|<<extend>>| UC3
+    UC6 -.->|<<extend>>| UC3
+    UC7 -.->|<<extend>>| UC3
+
+    UC8 -.->|<<include>>| UC1
+    UC8 -.->|<<include>>| UC2
+    UC8 -.->|<<include>>| UC9
+
+    UC5 -.->|<<extend>>| UC8
+    UC6 -.->|<<extend>>| UC8
+    UC7 -.->|<<extend>>| UC8
+
+%%  Alexis Gontier - v1.1.0 - 23/02/26
