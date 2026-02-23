@@ -1,17 +1,29 @@
 stateDiagram-v2
-    [*] --> Attente
+    [*] --> Veille
 
-    Attente --> SelectionPersonnage : Bouton Start appuyé
-    SelectionPersonnage --> EnJeu : Personnage sélectionné
+    Veille --> SelectionMode : Pièce insérée
+    SelectionMode --> SelectionPersonnage : Mode PvE choisi
+    SelectionMode --> AttenteAdversaire : Mode PvP choisi
+    AttenteAdversaire --> SelectionPersonnage : Room rejointe (code valide)
+    SelectionPersonnage --> EnJeu : Personnage confirmé + plunger tiré
 
+    state EnJeu {
+        [*] --> Actif
+        Actif --> UltimePret : barreUltime = 100%
+        UltimePret --> Actif : Ultime déclenché
+    }
+
+    EnJeu --> Tilt : Gyroscope > seuil
+    Tilt --> BillePerdue
     EnJeu --> BillePerdue : Bille hors limites
-    EnJeu --> EnJeu : Buff activé
+    BillePerdue --> EnJeu : vies > 0
+    BillePerdue --> Resultats : vies = 0
 
-    BillePerdue --> EnJeu : Balles restantes
-    BillePerdue --> FinDePartie : Plus de balles
+    EnJeu --> BossVaincu : HP boss = 0
+    BossVaincu --> EnJeu : indexBoss < 3
+    BossVaincu --> Resultats : tous les boss vaincus
 
-    FinDePartie --> Attente : Rejouer
+    Resultats --> Veille : Start pressé ou délai expiré
+    Resultats --> [*]
 
-    FinDePartie --> [*]
-
-%%  Alexis Gontier - v1.0.0 - 17/02/26
+%%  Alexis Gontier - v1.1.0 - 23/02/26
