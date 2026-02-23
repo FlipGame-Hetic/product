@@ -3,7 +3,6 @@ classDiagram
         +Bille bille
         +Flipper[] flippers
         +Bumper[] bumpers
-        +Personnage personnage
         +rendu()
         +gererPhysique()
     }
@@ -22,23 +21,59 @@ classDiagram
         +desactiver()
     }
 
+    class Bumper {
+        +Vector3 position
+        +int valeurPoints
+        +declencher()
+    }
+
+    class Capacite {
+        +string nom
+        +string type
+        +int cooldownMs
+        +bool estActive
+        +activer()
+        +desactiver()
+    }
+
     class Personnage {
         +string nom
-        +string buff
-        +string malus
-        +activerBuff()
+        +Capacite bonus
+        +Capacite malus
+        +activerBonus()
         +activerMalus()
+    }
+
+    class Boss {
+        +string nom
+        +int hp
+        +int hpMax
+        +Capacite malus
+        +prendreDegats(int)
+        +appliquerMalus()
+        +estVaincu() bool
+    }
+
+    class Joueur {
+        +string id
+        +Personnage personnage
+        +int vies
+        +int score
+        +float barreUltime
+        +ajouterPoints(int)
+        +perdreBille()
+        +chargerUltime(float)
     }
 
     class Serveur {
         +Room[] rooms
-        +EtatJeu etat
         +diffuserEvenement()
         +creerRoom()
     }
 
     class Room {
         +string code
+        +string mode
         +Joueur[] joueurs
         +EtatJeu etat
         +rejoindre()
@@ -46,18 +81,24 @@ classDiagram
     }
 
     class EtatJeu {
-        +int score
-        +int balles
         +string statut
-        +ajouterPoints()
-        +estFinDePartie()
+        +Boss bossActuel
+        +int indexBoss
+        +mettreAJour()
+        +estFinDePartie() bool
+        +calculerXP() int
     }
 
     Playfield *-- Bille
     Playfield *-- Flipper
-    Playfield *-- Personnage
-    Playfield --> Serveur
+    Playfield *-- Bumper
+    Playfield --> Joueur
+    Joueur --> Personnage
+    Personnage *-- Capacite
+    Boss *-- Capacite
     Serveur *-- Room
-    Serveur *-- EtatJeu
+    Room *-- EtatJeu
+    Room --> Joueur
+    EtatJeu --> Boss
 
-%%  Alexis Gontier - v1.0.0 - 17/02/26
+%%  Alexis Gontier - v1.1.0 - 23/02/26
