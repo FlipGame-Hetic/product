@@ -1,63 +1,236 @@
 classDiagram
-    class Playfield {
-        +Bille bille
-        +Flipper[] flippers
-        +Bumper[] bumpers
-        +Personnage personnage
-        +rendu()
-        +gererPhysique()
+    direction LR
+
+    %% ═══════════ Contrats partagés (crate shared / @frontend/types) ═══════════
+    namespace Contrats_partages {
+        class WsMessage {
+            <<enumeration>> dir
+            Inbound device_id + InboundMessage
+            Outbound device_id + OutboundMessage
+        }
+        class InboundMessage {
+            <<enumeration>> _type
+            Button
+            Plunger
+            Gyro
+            Telemetry
+            Event
+            Status
+        }
+        class OutboundMessage {
+            <<enumeration>> _type
+            BallHit
+            GameState
+            Command
+        }
+        class Subtopic {
+            <<enumeration>>
+            input/button
+            input/plunger
+            input/gyro
+            ball/hit
+            game/state
+            telemetry
+            events
+            cmd
+            status
+        }
+        class ButtonId {
+            <<enumeration>>
+            L1 (alias flipper_left)
+            R1 (alias flipper_right)
+            L2 (alias extra1)
+            R2 (alias extra2)
+            Start
+        }
+        class HitType {
+            <<enumeration>>
+            bumper rail slingshot
+            drain target spinner
+        }
+        class ModelGamePhase {
+            <<enumeration>> shared::model
+            idle attract start playing
+            ball_lost bonus tilt
+            game_over high_score
+        }
+        class ScreenEnvelope {
+            +ScreenId from
+            +ScreenTarget to
+            +string event_type
+            +unknown payload
+        }
+        class ScreenId {
+            <<enumeration>>
+            front_screen
+            back_screen
+            dmd_screen
+        }
     }
 
-    class Bille {
-        +Vector3 position
-        +Vector3 vitesse
-        +appliquerForce()
-        +reinitialiser()
+    %% ═══════════ Backend — crate game-logic (moteur autoritaire) ═══════════
+    namespace Backend_game_logic {
+        class GameState {
+            +EnginePhase phase
+            +u64 score
+            +u8 lives
+            +bool multiball_active
+            +u32 ultimate_charge
+            +bool shield_active
+            +f32 damage_multiplier
+            +u8 extra_balls
+            +bool cheating_detected
+            +add_score()
+            +apply_penalty()
+        }
+        class EnginePhase {
+            <<enumeration>>
+            Idle
+            InGame
+            GameOver
+        }
+        class TiltState {
+            +u8 count
+            +on_tilt() TiltEffect
+            +reset()
+        }
+        class GameEvent {
+            <<enumeration>>
+            StartGame EndGame
+            BallLaunched BallLost BallSaved
+            ButtonPressed BumperHit
+            UltimateActivated ComboActivated
+            MultiballTriggered TiltDetected
+            BossDefeated GameOverTriggered
+        }
+        class Character {
+            <<trait>>
+            +slug() str
+            +name() str
+            +stats() CharacterStats
+            +ulti_id() str
+            +ulti_shape() UltiShape
+        }
+        class CharacterImpl {
+            <<implements>>
+            Enforcer KEENU multiball_split Instant
+            Viper VIPER rampage Sustained
+            Ghost GHOST mimic Inherited
+            Oracle ORACLE time_slow Sustained
+        }
+        class CharacterStats {
+            +CharacterChargeProfile charge_profile
+        }
+        class CharacterChargeProfile {
+            +u32 charge_max
+            +f32 weight_bumper
+            +f32 weight_rail
+            +f32 weight_combo
+            +f32 weight_other
+            +f32 time_rate
+        }
+        class UltiShape {
+            <<enumeration>>
+            Instant
+            Sustained duration_ms cancellable
+            Inherited
+        }
+        class ComboEffect {
+            +u8 combo_id
+            +u32 bonus_pts
+            +Vec~string~ sequence
+        }
+        class PveState {
+            +u8 current_boss_index
+            +u32 endless_level
+            +HealthComponent boss_health
+            +PvePhase phase
+        }
+        class PvePhase {
+            <<enumeration>>
+            WaitingForScore Fighting
+            Cooldown Victory
+            GameOver
+        }
+        class Boss {
+            +BossKind kind
+            +HealthComponent health
+            +bool malus_active
+            +take_hit() bool
+        }
+        class BossKind {
+            <<enumeration>>
+            GLaDOS HAL9000 AUTO
+        }
+        class HealthComponent {
+            +u32 max
+            +u32 current
+            +take_damage()
+            +is_dead() bool
+            +percentage() f32
+        }
     }
 
-    class Flipper {
-        +string cote
-        +bool estActif
-        +activer()
-        +desactiver()
+    %% ═══════════ Frontend — apps React (front / back / dmd) ═══════════
+    namespace Frontend_React {
+        class BackScreenStore {
+            +FrontGamePhase phase
+            +GameMode selectedMode
+            +CharacterType selectedCharacter
+            +int score
+            +int ballNumber
+        }
+        class FrontGamePhase {
+            <<enumeration>>
+            idle mode_select
+            character_select playing
+            paused game_over
+        }
+        class GameMode {
+            <<enumeration>>
+            solo duo boss
+        }
+        class StartGamePlayer {
+            +int player
+            +CharacterType character
+        }
+        class CharacterConfig {
+            +CharacterType id
+            +string label
+            +bool locked
+        }
+        class CharacterType {
+            <<enumeration>>
+            enforcer viper
+            ghost oracle
+        }
     }
 
-    class Personnage {
-        +string nom
-        +string buff
-        +string malus
-        +activerBuff()
-        +activerMalus()
-    }
+    %% ═══════════ Relations ═══════════
+    WsMessage o-- InboundMessage
+    WsMessage o-- OutboundMessage
+    ScreenEnvelope --> ScreenId
+    InboundMessage ..> ButtonId : Button.id
+    OutboundMessage ..> HitType : BallHit.hits
+    OutboundMessage ..> ModelGamePhase : GameState.state
 
-    class Serveur {
-        +Room[] rooms
-        +EtatJeu etat
-        +diffuserEvenement()
-        +creerRoom()
-    }
+    GameState *-- EnginePhase
+    GameState *-- TiltState
+    GameState ..> GameEvent : consomme
+    GameState ..> ComboEffect
+    Character <|.. CharacterImpl : implémentent
+    Character ..> CharacterStats : expose
+    Character ..> UltiShape
+    CharacterStats *-- CharacterChargeProfile
+    PveState *-- PvePhase
+    PveState *-- HealthComponent
+    Boss *-- HealthComponent
+    Boss *-- BossKind
 
-    class Room {
-        +string code
-        +Joueur[] joueurs
-        +EtatJeu etat
-        +rejoindre()
-        +quitter()
-    }
+    BackScreenStore --> FrontGamePhase
+    BackScreenStore --> GameMode
+    BackScreenStore --> CharacterType
+    StartGamePlayer --> CharacterType
+    CharacterConfig --> CharacterType
 
-    class EtatJeu {
-        +int score
-        +int balles
-        +string statut
-        +ajouterPoints()
-        +estFinDePartie()
-    }
-
-    Playfield *-- Bille
-    Playfield *-- Flipper
-    Playfield *-- Personnage
-    Playfield --> Serveur
-    Serveur *-- Room
-    Serveur *-- EtatJeu
-
-%%  Alexis Gontier - v1.0.0 - 17/02/26
+%% Alexis Gontier — v2.0 — 24/06/26

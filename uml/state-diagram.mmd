@@ -1,17 +1,37 @@
 stateDiagram-v2
-    [*] --> Attente
+    %% Machine à états autoritaire du moteur backend (crate game-logic)
+    %% engine::GamePhase = Idle | InGame | GameOver, avec sous-états PvE.
 
-    Attente --> SelectionPersonnage : Bouton Start appuyé
-    SelectionPersonnage --> EnJeu : Personnage sélectionné
+    [*] --> Idle
 
-    EnJeu --> BillePerdue : Bille hors limites
-    EnJeu --> EnJeu : Buff activé
+    Idle --> InGame : StartGame
 
-    BillePerdue --> EnJeu : Balles restantes
-    BillePerdue --> FinDePartie : Plus de balles
+    state InGame {
+        [*] --> WaitingForScore
+        WaitingForScore --> Fighting : seuil de score atteint (boss spawn)
 
-    FinDePartie --> Attente : Rejouer
+        Fighting --> Fighting : BumperHit / ComboActivated / UltimateActivated / BallSaved / LifeUp
+        Fighting --> Fighting : TiltDetected (pénalité -2000 puis -6000)
+        Fighting --> Cheating : 3e Tilt → cheating_detected
+        Cheating --> Fighting : score gelé (add_score ignoré)
 
-    FinDePartie --> [*]
+        Fighting --> Cooldown : BossDefeated (animation de mort)
+        Cooldown --> WaitingForScore : boss suivant (current_boss_index++)
+        Cooldown --> Victory : dernier boss vaincu / endless_level++
+    }
 
-%%  Alexis Gontier - v1.0.0 - 17/02/26
+    InGame --> GameOver : GameOverTriggered (NoLivesLeft)
+    InGame --> GameOver : GameOverTriggered (PlayerQuit)
+    Victory --> GameOver : EndGame
+
+    GameOver --> Idle : rejouer / attract
+    GameOver --> [*]
+
+    note right of InGame
+        L'UI back_screen reflète un sous-ensemble :
+        idle → mode_select → character_select →
+        playing ⇄ paused → game_over
+        L'ESP32 reçoit ces phases via game/state (retain).
+    end note
+
+%% Alexis Gontier — v2.0 — 24/06/26
