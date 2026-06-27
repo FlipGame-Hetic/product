@@ -1,67 +1,68 @@
 sequenceDiagram
-    participant ESP as ESP32
-    participant MQTT as Mosquitto Broker
-    participant BRIDGE as Rust Bridge
-    participant SRV as Serveur
-    participant PF as Playfield
-    participant BG as Backglass
-    participant DMD as DMD
+    participant ESP as ESP32 (IoT)
+    participant MQTT as Mosquitto
+    participant BR as mqtt-bridge
+    participant API as API + game-logic
+    participant FS as front_screen (R3F + Rapier)
+    participant BS as back_screen
+    participant DMD as dmd_screen
 
-    Note over ESP,DMD: Joueur appuie sur le flipper
+    Note over ESP,DMD: Sélection & démarrage (mode boss / solo PvE)
+    BS->>API: ScreenEnvelope start_game {mode, players[]}
+    API->>API: GameEvent::StartGame → GameState (lives, PveState boss 0)
+    API->>BR: WsMessage Outbound GameState {state:"start"}
+    BR->>MQTT: pub pinball/<id>/game/state (retain)
+    MQTT->>ESP: sub game/state
 
-    ESP->>MQTT: pub flipper_appuyé
-    MQTT->>BRIDGE: sub flipper_appuyé
-    BRIDGE->>BRIDGE: feedback haptique local
-    BRIDGE->>MQTT: pub vibration + son
-    MQTT->>ESP: sub vibration + son
-    BRIDGE->>SRV: WebSocket flipper_appuyé
+    Note over ESP,DMD: Lancement de la bille (plunger)
+    ESP->>MQTT: pub input/plunger {position, released:true}
+    MQTT->>BR: sub input/plunger
+    BR->>API: WsMessage Inbound Plunger
+    API-->>FS: routage → spawn + impulsion bille (force = position)
 
-    SRV->>PF: WebSocket activer_flipper
-    PF->>PF: Rapier.js applique force
+    Note over ESP,DMD: Flipper hardware
+    ESP->>MQTT: pub input/button {id:"flipper_left", state:1}
+    MQTT->>BR: sub input/button
+    BR->>API: WsMessage Inbound Button
+    API-->>FS: GameEvent::ButtonPressed → active flipper
+    FS->>FS: Rapier applique l'impulsion
 
-    Note over PF,DMD: Collision avec bumper
+    Note over FS,DMD: Collision détectée côté physique (front)
+    FS->>API: ScreenEnvelope ball_hit {hits:[{id,type,force}]}
+    API->>API: scoring + combo.detector → ComboEffect, BossDefeated?
+    API->>BR: WsMessage Outbound BallHit {hits[]}
+    BR->>MQTT: pub ball/hit
+    MQTT->>ESP: sub ball/hit → profil vibration (bumper/rail/slingshot...)
+    API-->>DMD: broadcast ScoreUpdate {score, multiplier}
+    API-->>BS: broadcast ScoreDelta + ComboActivated
 
-    PF->>SRV: WebSocket bumper_touché 100pts
-    SRV->>SRV: maj score + calcul dégâts boss
-    SRV->>BG: WebSocket maj_score + hp_boss
-    SRV->>DMD: WebSocket maj_score
-    SRV->>BRIDGE: WebSocket bumper_touché
-    BRIDGE->>MQTT: pub déclencher_solénoïde
-    MQTT->>ESP: sub déclencher_solénoïde
-    ESP->>ESP: active solénoïde
-
-    Note over ESP,DMD: Joueur charge et déclenche son ultime
-
-    ESP->>MQTT: pub flippers_maintenus
-    MQTT->>BRIDGE: sub flippers_maintenus
-    BRIDGE->>SRV: WebSocket flippers_maintenus
-    SRV->>SRV: barreUltime = 100% → prêt
-    SRV->>BG: WebSocket ultime_pret (animation)
-    SRV->>DMD: WebSocket ultime_pret
-
-    ESP->>MQTT: pub flippers_relachés
-    MQTT->>BRIDGE: sub flippers_relachés
-    BRIDGE->>SRV: WebSocket ultime_déclenché
-    SRV->>SRV: burst dégâts → HP boss -= burst
-    SRV->>BG: WebSocket animation_ultime + hp_boss
-    SRV->>DMD: WebSocket hp_boss + barreUltime_reset
-    SRV->>PF: WebSocket animation_ultime
-
-    Note over ESP,DMD: Bille perdue
-
-    ESP->>MQTT: pub bille_perdue
-    MQTT->>BRIDGE: sub bille_perdue
-    BRIDGE->>SRV: WebSocket bille_perdue
-    SRV->>SRV: décrémente vies
-    SRV->>DMD: WebSocket maj_vies
-
-    alt vies > 0
-        SRV->>PF: WebSocket replaçer_bille
-        SRV->>BG: WebSocket reprendre_partie
-    else dernière vie perdue
-        SRV->>PF: WebSocket game_over
-        SRV->>BG: WebSocket game_over
-        SRV->>DMD: WebSocket game_over
+    Note over ESP,DMD: Boss touché (mode PvE)
+    API->>API: Boss.take_hit(dmg) → HealthComponent
+    alt boss vaincu
+        API->>API: PvePhase Transition → boss suivant / Victory
+        API-->>DMD: broadcast LifeUpdate + nouveau boss
     end
 
-%%  Alexis Gontier - v1.1.0 - 23/02/26
+    Note over ESP,DMD: Gyroscope / Tilt
+    ESP->>MQTT: pub input/gyro {ax,ay,az, tilt:true}
+    MQTT->>BR: sub input/gyro
+    BR->>API: WsMessage Inbound Gyro
+    API->>API: TiltState.on_tilt → Penalty puis cheating_detected
+
+    Note over ESP,DMD: Bille perdue
+    FS->>API: ScreenEnvelope ball_lost {ball, player}
+    API->>API: GameEvent::BallLost → lives--
+    alt vies restantes
+        API->>BR: Outbound GameState {state:"ball_lost"}
+        BR->>MQTT: pub game/state
+        FS->>FS: BallSaver / replace bille
+    else dernière vie (NoLivesLeft)
+        API->>API: GameEvent::GameOverTriggered
+        API->>BR: Outbound GameState {state:"game_over"}
+        BR->>MQTT: pub game/state (retain)
+        MQTT->>ESP: sub game/state
+        API-->>BS: broadcast EndGame
+        API-->>DMD: broadcast EndGame + high_score
+    end
+
+%% Alexis Gontier — v2.0 — 24/06/26

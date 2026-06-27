@@ -1,14 +1,38 @@
 graph LR
     J([Joueur])
+    OP([Opérateur])
+    ESP([ESP32 / Hardware])
 
+    %% ─── Joueur (gameplay) ───
     J --> UC1[UC-01 Démarrer une partie]
-    J --> UC2[UC-02 Choisir un personnage]
-    J --> UC3[UC-03 Jouer en PvE]
-    J --> UC4[UC-04 Affronter un boss]
-    J --> UC5[UC-05 Activer son ultime]
-    J --> UC6[UC-06 Perdre une bille]
-    J --> UC7[UC-07 Tilt]
-    J --> UC8[UC-08 Match PvP]
-    J --> UC9[UC-09 Terminer une partie]
+    J --> UC2[UC-02 Choisir un mode solo / duo / boss]
+    J --> UC3[UC-03 Choisir un personnage]
+    J --> UC4[UC-04 Lancer la bille au plunger]
+    J --> UC5[UC-05 Actionner les flippers]
+    J --> UC6[UC-06 Frapper bumpers / slingshots / cibles]
+    J --> UC7[UC-07 Enchaîner un combo / multiplicateur]
+    J --> UC8[UC-08 Activer son ultime]
+    J --> UC9[UC-09 Déclencher le multiball]
+    J --> UC10[UC-10 Affronter les boss GLaDOS / HAL9000 / AUTO]
+    J --> UC11[UC-11 Secouer la table sans déclencher le Tilt]
+    J --> UC12[UC-12 Match PvP en duo]
+    J --> UC13[UC-13 Terminer la partie]
 
-%%  Alexis Gontier - v1.0.0 - 17/02/26
+    %% ─── Hardware (IoT) ───
+    ESP --> UC14[UC-14 Émettre les entrées MQTT button/plunger/gyro]
+    ESP --> UC15[UC-15 Restituer le feedback haptique 9 vibreurs]
+    ESP --> UC16[UC-16 Publier télémétrie + statut retain/LWT]
+
+    %% ─── Opérateur (back-screen / maintenance) ───
+    OP --> UC17[UC-17 Superviser les logs temps réel]
+    OP --> UC18[UC-18 Suivre l'état des connexions API/MQTT/IoT]
+    OP --> UC19[UC-19 Envoyer une commande vibrate / reboot / OTA]
+
+    %% ─── Relations ───
+    UC5 -.->|include| UC6
+    UC6 -.->|extend| UC7
+    UC6 -.->|include| UC15
+    UC11 -.->|extend| UCT[Tilt → pénalité / cheating]
+    UC13 -.->|include| UC20[UC-20 Enregistrer le score / leaderboard]
+
+%% Alexis Gontier — v2.0 — 24/06/26

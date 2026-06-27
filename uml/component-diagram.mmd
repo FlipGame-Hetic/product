@@ -1,0 +1,61 @@
+flowchart TB
+
+    %% ═══════════════ IoT — Borne physique (ESP32) ═══════════════
+    subgraph IOT["Borne physique — ESP32-C6 (PlatformIO)"]
+        direction TB
+        BTN["Boutons / Plunger / Gyroscope<br/>flipper_left, flipper_right, start, extra_1/2"]
+        VIB["9 vibreurs haptiques"]
+        FW["Firmware Arduino<br/>Button / WiFiConnection / MQTT / Log"]
+        BTN --> FW
+        FW --> VIB
+    end
+
+    %% ═══════════════ Broker MQTT ═══════════════
+    subgraph BROKER["Broker (Pc local)"]
+        MOSQ["Mosquitto<br/>:1883 / :9001 (WS)"]
+    end
+
+    %% ═══════════════ Backend — workspace Rust (Docker) ═══════════════
+    subgraph BACKEND["Backend — Cargo workspace (Docker)"]
+        direction TB
+        BRIDGE["mqtt-bridge<br/>MQTT ↔ WsMessage /ws/bridge"]
+        subgraph API["api (Axum :8080)"]
+            direction TB
+            GL["game-logic<br/>engine / pve / combo / scoring"]
+            HUB["screen-hub<br/>routage ScreenEnvelope"]
+            REST["REST + doc Lucyd /docs<br/>WS /ws/screen/{id}"]
+        end
+        DB[("SQLite<br/>flipper.db")]
+        NGINX["nginx :80"]
+        BRIDGE --> HUB
+        GL --- HUB
+        HUB --> REST
+        REST --> DB
+        NGINX --> REST
+    end
+
+    %% ═══════════════ Frontend — monorepo pnpm (3 écrans) ═══════════════
+    subgraph FRONT["Frontend — monorepo pnpm (React 19 / Vite)"]
+        direction TB
+        FS["front-screen :3000<br/>R3F + Rapier (physique 3D)"]
+        BS["back-screen :3001<br/>console opérateur / logs"]
+        DMD["dmd-screen :3002<br/>score pixel-art DMD"]
+    end
+
+    %% ─── Flux IoT ↔ Broker (MQTT, prefix pinball/<id>/) ───
+    FW -- "pub input/button, input/plunger,<br/>input/gyro, telemetry, status(LWT)" --> MOSQ
+    MOSQ -- "sub ball/hit, game/state, cmd" --> FW
+
+    %% ─── Broker ↔ Bridge ───
+    MOSQ <-- "WsMessage Inbound / Outbound" --> BRIDGE
+
+    %% ─── API ↔ Écrans (WebSocket screen-hub, JWT) ───
+    REST <-- "WS /ws/screen/front_screen (JWT)" --> FS
+    REST <-- "WS /ws/screen/back_screen (JWT)" --> BS
+    REST <-- "WS /ws/screen/dmd_screen (JWT)" --> DMD
+
+    %% ─── Boucle de feedback : collisions front → ESP32 ───
+    FS -. "ball_hit / ball_lost / score" .-> HUB
+    HUB -. "BallHit → cmd vibreur" .-> BRIDGE
+
+%% Alexis Gontier — v2.0 — 24/06/26
